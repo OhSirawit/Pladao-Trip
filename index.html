@@ -364,6 +364,7 @@
                         <option value="date">📅 Date</option>
                         <option value="payment">💳 Payment</option>
                         <option value="category">📂 Category</option>
+                        <option value="user">👤 User</option>
                         <option value="price-high">💰 Price (High)</option>
                         <option value="price-low">💰 Price (Low)</option>
                     </select>
@@ -557,7 +558,7 @@
         // ---------------------------------------------
 
         window.onload = function() { 
-            updateNetworkStatus(); // เช็คสถานะเน็ตตั้งแต่โหลดหน้าเว็บ
+            updateNetworkStatus(); 
 
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             const currentUser = localStorage.getItem('currentUser');
@@ -975,6 +976,11 @@
                 if (sortType === 'date') return dateB - dateA; 
                 if (sortType === 'payment') return a.payment === b.payment ? dateB - dateA : a.payment.localeCompare(b.payment); 
                 if (sortType === 'category') return a.category === b.category ? dateB - dateA : a.category.localeCompare(b.category); 
+                if (sortType === 'user') {
+                    let userA = (a.username || 'ADMIN').toUpperCase();
+                    let userB = (b.username || 'ADMIN').toUpperCase();
+                    return userA === userB ? dateB - dateA : userA.localeCompare(userB);
+                }
                 if (sortType === 'price-high') return realAmtB - realAmtA; 
                 if (sortType === 'price-low') return realAmtA - realAmtB; 
                 return 0;
