@@ -440,9 +440,6 @@
     </div>
 
     <script>
-        // =========================================================================
-        // URL ของ Google Apps Script ที่ได้จากการ Deploy เป็น Web App
-        // =========================================================================
         const API_URL = "https://script.google.com/macros/s/AKfycbxVqmcEP6gyUeObAkFj7EnBIMCZl1oTKResA3Oz7Bg_KtCKZ-p87etc_xPi-k-ANclT/exec";
 
         let expenses = []; 
@@ -516,10 +513,12 @@
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             const currentUser = localStorage.getItem('currentUser');
             const now = Date.now();
-            const THIRTY_MINUTES = 30 * 60 * 1000;
+            
+            // เปลี่ยนระยะเวลาจำการล็อกอินเป็น 3 วัน (72 ชั่วโมง)
+            const THREE_DAYS = 3 * 24 * 60 * 60 * 1000;
 
-            if (loginTimestamp && currentUser && (now - parseInt(loginTimestamp)) < THIRTY_MINUTES) {
-                localStorage.setItem('loginTimestamp', now.toString());
+            if (loginTimestamp && currentUser && (now - parseInt(loginTimestamp)) < THREE_DAYS) {
+                localStorage.setItem('loginTimestamp', now.toString()); // อัปเดตเวลาล่าสุดทุกครั้งที่เข้าแอป
                 document.getElementById('login-page').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 
