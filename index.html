@@ -212,7 +212,6 @@
                     <li><button onclick="switchPage('dashboard');" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-chart-pie w-4 text-indigo-500"></i> Analytics</button></li>
                     <div class="border-t border-slate-100 my-1"></div>
                     
-                    <!-- New Menu: Pre-Trip Expenses -->
                     <li>
                         <a href="https://script.google.com/macros/s/AKfycbzrADnbwPkeXGG6IuXZyP-MVuFd31HCSO098xWnNfevKmDb_qVwJE4M0_8P2cCsjFbX/exec" target="_blank" onclick="toggleMenu();" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3">
                             <i class="fas fa-file-invoice-dollar w-4 text-amber-500"></i> Pre-Trip Expenses
@@ -539,7 +538,27 @@
             }
         }
 
+        // --- ระบบเช็คอินเทอร์เน็ต (Offline Detection) ---
+        function updateNetworkStatus() {
+            const btn = document.getElementById('submit-btn');
+            if (!btn) return;
+            if (navigator.onLine) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.innerHTML = currentEditRowId ? 'Update Record <i class="fas fa-save"></i>' : 'Save Record';
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.innerHTML = '<i class="fas fa-wifi text-rose-400"></i> Offline';
+            }
+        }
+        window.addEventListener('online', updateNetworkStatus);
+        window.addEventListener('offline', updateNetworkStatus);
+        // ---------------------------------------------
+
         window.onload = function() { 
+            updateNetworkStatus(); // เช็คสถานะเน็ตตั้งแต่โหลดหน้าเว็บ
+
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             const currentUser = localStorage.getItem('currentUser');
             const now = Date.now();
@@ -562,17 +581,40 @@
                 document.getElementById('main-app').classList.add('hidden');
             }
 
+            // --- ระบบบีบอัดภาพ (Image Compression) ก่อนแปลงเป็น Base64 ---
             document.getElementById('receipt-file').addEventListener('change', function(e) {
                 const file = e.target.files[0];
                 if (!file) return;
                 document.getElementById('receipt-text').innerText = file.name;
+                receiptName = file.name;
+
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    receiptBase64 = event.target.result;
-                    receiptName = file.name;
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800; // กำหนดความกว้างสูงสุด
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // บีบอัดเป็น JPEG คุณภาพ 70%
+                        receiptBase64 = canvas.toDataURL('image/jpeg', 0.7);
+                    };
+                    img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             });
+            // --------------------------------------------------------
         };
 
         document.addEventListener('click', function(event) {
@@ -587,6 +629,11 @@
 
         async function handleLogin(e) { 
             e.preventDefault(); 
+            if (!navigator.onLine) {
+                showToast("No Internet Connection!", true);
+                return;
+            }
+
             const username = document.getElementById('username-input').value; 
             const pin = document.getElementById('pin-input').value; 
             const btn = document.getElementById('login-btn'); 
@@ -1155,6 +1202,11 @@
 
         document.getElementById('expense-form').addEventListener('submit', async (e) => {
             e.preventDefault(); 
+            if (!navigator.onLine) {
+                showToast("No Internet Connection!", true);
+                return;
+            }
+
             const detailsVal = document.getElementById('details').value; 
             let amountVal = document.getElementById('amount').value;
             amountVal = Math.abs(parseFloat(amountVal));
