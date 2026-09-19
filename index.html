@@ -29,6 +29,7 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -458,7 +459,8 @@
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxVqmcEP6gyUeObAkFj7EnBIMCZl1oTKResA3Oz7Bg_KtCKZ-p87etc_xPi-k-ANclT/exec";
+        // ใช้ API_URL ตัวล่าสุด
+        const API_URL = "https://script.google.com/macros/s/AKfycbwLFbEYvFOBK8jSmhmZGDQ38x5rIPgNpslq7qF-sE-OKSgxuxIJbZegMFJyN4E4AZa5/exec";
 
         let expenses = []; 
         let myOverallCategoryChart = null; 
@@ -467,7 +469,7 @@
         
         let currentEditRowId = null;
         let oldReceiptUrl = "";
-        let currentJpyToThbRate = 0; // เก็บค่าเรทเงิน
+        let currentJpyToThbRate = 0; 
         
         const globalColorsMap = { 
             'Food': '#f43f5e',        
@@ -485,7 +487,6 @@
         let receiptBase64 = null;
         let receiptName = null;
 
-        // --- ระบบคำนวณเงินบาท (THB) แบบ Real-time ---
         async function fetchExchangeRate() {
             try {
                 const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
@@ -511,7 +512,6 @@
                 thbEl.classList.add('hidden');
             }
         }
-        // ---------------------------------------------
 
         function getBudget() {
             return parseFloat(localStorage.getItem('tripBudget')) || 150000;
@@ -588,7 +588,7 @@
 
         window.onload = function() { 
             updateNetworkStatus(); 
-            fetchExchangeRate(); // โหลดเรทเงินตอนเปิดเว็บ
+            fetchExchangeRate(); 
 
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             const currentUser = localStorage.getItem('currentUser');
@@ -1055,7 +1055,6 @@
                 }
                 daily[item.date].categories[item.category].amt += amt;
                 
-                // --- ระบบสร้างพรีวิวรูปภาพขนาดย่อ (Thumbnail) ---
                 const dMatch = item.receipt ? item.receipt.match(/\/d\/(.+?)\//) : null;
                 const thumbHtml = dMatch ? `
                     <div class="mt-2.5">
@@ -1066,7 +1065,12 @@
                                  alt="Receipt">
                         </a>
                     </div>` : '';
-                // ---------------------------------------------
+
+                let appliedRate = item.rate ? parseFloat(item.rate) : currentJpyToThbRate;
+                let thbLine = '';
+                if(appliedRate > 0) {
+                    thbLine = `<p class="text-[10px] font-bold text-indigo-400 mt-0.5 whitespace-nowrap">≈ ${(amt * appliedRate).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})} THB <span class="text-slate-400 font-medium">(Rate: ${appliedRate.toFixed(4)})</span></p>`;
+                }
 
                 const div = document.createElement('div'); 
                 div.className = "modern-card p-4 flex justify-between items-start gap-2"; 
@@ -1085,8 +1089,11 @@
                             ${thumbHtml}
                         </div>
                     </div>
-                    <div class="text-right flex flex-col justify-between h-full">
-                        <p class="text-[16px] font-black ${isRef ? 'text-emerald-500' : 'text-slate-900'}">${isRef ? '+' : '-'}${amt.toLocaleString()}</p>
+                    <div class="text-right flex flex-col justify-between h-full items-end">
+                        <div class="text-right">
+                            <p class="text-[16px] font-black ${isRef ? 'text-emerald-500' : 'text-slate-900'}">${isRef ? '+' : '-'}${amt.toLocaleString()} JPY</p>
+                            ${thbLine}
+                        </div>
                         <div class="flex justify-end gap-3 mt-2 items-center">
                             ${item.receipt ? `<a href="${item.receipt}" target="_blank" class="text-slate-300 hover:text-indigo-500 transition-colors"><i class="fas fa-image text-[13px]"></i></a>` : ''}
                             ${item.location ? `<a href="${item.location}" target="_blank" class="text-slate-300 hover:text-indigo-500 transition-colors"><i class="fas fa-location-dot text-[13px]"></i></a>` : ''}
@@ -1166,7 +1173,7 @@
                             <p class="text-xs font-black text-slate-500 uppercase tracking-widest">${date}</p>
                         </div>
                         <div class="flex items-center gap-3.5 text-right">
-                            <p class="text-[17px] font-black text-slate-900">${data.total.toLocaleString()}</p>
+                            <p class="text-[17px] font-black text-slate-900">${data.total.toLocaleString()} JPY</p>
                             <i id="icon-${date}" class="fas fa-chevron-down text-slate-300 text-sm rotate-icon"></i>
                         </div>
                     </div>
@@ -1179,7 +1186,7 @@
                                     <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: ${globalColorsMap[cat] || '#94a3b8'}"></span>
                                     <span class="font-bold text-slate-700">${cat}</span>
                                 </div>
-                                <span class="font-black ${catInfo.isRef ? 'text-emerald-500' : 'text-slate-800'}">${catInfo.isRef ? '+' : '-'}${catInfo.amt.toLocaleString()}</span>
+                                <span class="font-black ${catInfo.isRef ? 'text-emerald-500' : 'text-slate-800'}">${catInfo.isRef ? '+' : '-'}${catInfo.amt.toLocaleString()} JPY</span>
                             </div>`;
                         }).join('')}
                     </div>`; 
@@ -1285,7 +1292,8 @@
                 location: loc, 
                 receiptBase64: receiptBase64, 
                 receiptName: receiptName,
-                username: localStorage.getItem('currentUser') || 'ADMIN' 
+                username: localStorage.getItem('currentUser') || 'ADMIN',
+                rate: currentJpyToThbRate 
             };
             
             if(localStorage.getItem('loginTimestamp')) { 
