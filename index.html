@@ -324,6 +324,7 @@
                     </div>
                     
                     <div class="flex items-baseline gap-2 mb-6 mt-1">
+                        <!-- ปัดเศษลง (Math.floor) เฉพาะเลขที่จะโชว์บนยอด Available Balance -->
                         <h3 id="cash-remaining" class="font-black text-white tracking-tight text-[44px] leading-none">0</h3>
                         <span class="text-sm font-bold text-slate-400">JPY</span>
                     </div>
@@ -1487,7 +1488,9 @@
                 }
             }
             
-            document.getElementById('cash-remaining').innerText = remaining.toLocaleString(); 
+            // ใช้ Math.floor() ปัดเศษลงเพื่อความสวยงาม
+            document.getElementById('cash-remaining').innerText = Math.floor(remaining).toLocaleString(); 
+            
             const usedEl = document.getElementById('cash-used-text'); 
             if(usedEl) usedEl.innerText = cashUsed.toLocaleString();
             
