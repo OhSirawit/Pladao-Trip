@@ -142,6 +142,9 @@
             100% { background-position: 468px 0; } 
         }
 
+        /* ---------------- Tax Refund Color ---------------- */
+        .tax-refund-card { background-color: #FFEC8B !important; border-color: #e5d47e !important; }
+
         /* ---------------- Dark Mode Styles ---------------- */
         body.dark-mode { background-color: #0f172a; color: #f1f5f9; }
         body.dark-mode .modern-card { background-color: #1e293b; border-color: #334155; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); }
@@ -160,6 +163,7 @@
         body.dark-mode .nav-active span { color: #f1f5f9; }
         body.dark-mode #quick-tags-container button { background-color: #334155; border-color: #475569; color: #a5b4fc; }
         body.dark-mode #quick-tags-container button:hover { background-color: #6366f1; color: white; }
+        body.dark-mode .tax-refund-card { background-color: #3f3a1b !important; border-color: #6b622c !important; }
     </style>
 </head>
 <body class="pb-32 relative">
@@ -324,7 +328,6 @@
                     </div>
                     
                     <div class="flex items-baseline gap-2 mb-6 mt-1">
-                        <!-- ปัดเศษลง (Math.floor) เฉพาะเลขที่จะโชว์บนยอด Available Balance -->
                         <h3 id="cash-remaining" class="font-black text-white tracking-tight text-[44px] leading-none">0</h3>
                         <span class="text-sm font-bold text-slate-400">JPY</span>
                     </div>
@@ -436,7 +439,7 @@
                             <i id="icon-shared" class="fas fa-users text-slate-300 text-sm transition-colors"></i>
                             <span class="text-[10px] font-black text-slate-600 uppercase">Shared</span>
                         </div>
-                        <!-- สวิตช์ Tax Free เปลี่ยนเป็น Tax-Refund -->
+                        <!-- สวิตช์ Tax Refund -->
                         <div class="col-span-2 flex items-center justify-center gap-2 h-full py-3 bg-slate-50 rounded-[16px] border border-slate-100 cursor-pointer" onclick="toggleCheckbox('is-taxfree', 'icon-taxfree', 'text-amber-500')">
                             <input type="checkbox" id="is-taxfree" class="hidden">
                             <i id="icon-taxfree" class="fas fa-tag text-slate-300 text-sm transition-colors"></i>
@@ -1322,9 +1325,9 @@
                     badgeHtml += `<span class="text-[8px] font-bold bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-amber-100 whitespace-nowrap"><i class="fas fa-tag mr-1"></i>Tax-Refund</span>`;
                 }
 
-                // History Item Container
+                // History Item Container (เพิ่มคลาส tax-refund-card ถ้ารายการนั้นเป็น Tax-Free)
                 const div = document.createElement('div'); 
-                div.className = "modern-card p-4 flex justify-between items-start gap-2"; 
+                div.className = `modern-card p-4 flex justify-between items-start gap-2 ${item.isTaxFree ? 'tax-refund-card' : ''}`; 
                 div.innerHTML = `
                     <div class="flex gap-4 items-start text-left w-full overflow-hidden">
                         <div class="w-12 h-12 flex-shrink-0 mt-0.5 ${isRef ? 'bg-emerald-50 text-emerald-500 border border-emerald-100' : 'bg-slate-50 text-slate-700 border border-slate-100'} rounded-[16px] flex items-center justify-center">
