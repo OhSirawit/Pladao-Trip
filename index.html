@@ -312,7 +312,8 @@
                     </div>
                     
                     <div class="space-y-1.5"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
-                        <select id="category" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer" required>
+                        <!-- เพิ่ม onchange="renderQuickTags()" เพื่ออัปเดตปุ่มคีย์ลัดเมื่อเปลี่ยนหมวด -->
+                        <select id="category" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer" required onchange="renderQuickTags()">
                             <optgroup label="EXPENSES">
                                 <option value="Food">🍱 Food & Dining</option>
                                 <option value="Transportation">🚆 Transport</option>
@@ -334,6 +335,8 @@
                     <div class="space-y-1.5">
                         <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Note <span class="text-rose-500">*</span></label>
                         <input type="text" id="details" placeholder="What did you buy?" class="w-full input-style p-4 text-[13px] font-bold outline-none" required>
+                        <!-- เพิ่มคอนเทนเนอร์สำหรับปุ่ม Quick Tags ตรงนี้ -->
+                        <div id="quick-tags-container" class="flex flex-wrap gap-1.5 mt-2 px-1"></div>
                     </div>
                     
                     <div class="grid grid-cols-2 gap-3 pt-2">
@@ -459,7 +462,6 @@
     </div>
 
     <script>
-        // ใช้ API_URL ตัวล่าสุด
         const API_URL = "https://script.google.com/macros/s/AKfycbwLFbEYvFOBK8jSmhmZGDQ38x5rIPgNpslq7qF-sE-OKSgxuxIJbZegMFJyN4E4AZa5/exec";
 
         let expenses = []; 
@@ -486,6 +488,42 @@
         
         let receiptBase64 = null;
         let receiptName = null;
+
+        // --- ระบบปุ่มคีย์ลัด Quick Tags ---
+        const quickTagsMap = {
+            'Food': ['7-Eleven', 'Lawson', 'FamilyMart', 'Ramen', 'Yakiniku', 'Water/Drink'],
+            'Transportation': ['Suica / Pasmo', 'Train Ticket', 'Taxi', 'Shinkansen'],
+            'Dessert/Beverage': ['Coffee', 'Cafe', 'Ice Cream', 'Vending Machine'],
+            'Shopping': ['Don Quijote', 'Uniqlo', 'On Cloud', 'OWNDAYS', 'Drugstore', 'Daiso', 'Gashapon'],
+            'Gasoline': ['Fill up', 'LPG'],
+            'Tops up IC Card': ['Suica', 'Pasmo', 'Icoca']
+        };
+
+        function renderQuickTags() {
+            const category = document.getElementById('category').value;
+            const container = document.getElementById('quick-tags-container');
+            container.innerHTML = '';
+            
+            const tags = quickTagsMap[category];
+            if (tags && tags.length > 0) {
+                tags.forEach(tag => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'text-[10px] font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 hover:bg-indigo-500 hover:text-white transition-colors whitespace-nowrap shadow-sm';
+                    btn.innerText = tag;
+                    btn.onclick = () => {
+                        const noteInput = document.getElementById('details');
+                        if (noteInput.value.trim() === '') {
+                            noteInput.value = tag;
+                        } else {
+                            noteInput.value = noteInput.value.trim() + ' ' + tag;
+                        }
+                    };
+                    container.appendChild(btn);
+                });
+            }
+        }
+        // ---------------------------------
 
         async function fetchExchangeRate() {
             try {
@@ -589,6 +627,9 @@
         window.onload = function() { 
             updateNetworkStatus(); 
             fetchExchangeRate(); 
+            
+            // เรียกใช้เพื่อสร้างปุ่มตามหมวดหมู่แรกเริ่ม
+            renderQuickTags(); 
 
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             const currentUser = localStorage.getItem('currentUser');
@@ -936,6 +977,10 @@
 
             document.getElementById('payment').value = item.payment;
             document.getElementById('category').value = item.category;
+            
+            // อัปเดตปุ่มคีย์ลัดตามหมวดที่ดึงมา
+            renderQuickTags();
+
             document.getElementById('details').value = item.details;
             oldReceiptUrl = item.receipt;
             
@@ -959,6 +1004,9 @@
             receiptBase64 = null;
             receiptName = null;
             document.getElementById('receipt-text').innerText = "Receipt";
+            
+            // รีเซ็ตปุ่มคีย์ลัดให้กลับมาเป็นค่าตั้งต้นของหมวดหมู่แรก
+            renderQuickTags();
         }
 
         function updateUI() {
@@ -1334,6 +1382,10 @@
                         e.target.reset(); 
                         document.getElementById('date').value = new Date().toLocaleDateString('en-CA'); 
                         document.getElementById('thb-equivalent').classList.add('hidden');
+                        
+                        // รีเซ็ตปุ่มกลับเป็นค่าตั้งต้นหลังเซฟ
+                        renderQuickTags();
+
                         receiptBase64 = null; 
                         receiptName = null; 
                         document.getElementById('receipt-text').innerText = "Receipt"; 
