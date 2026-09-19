@@ -29,7 +29,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -288,9 +287,12 @@
                 
                 <form id="expense-form" class="space-y-4">
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Amount <span class="text-rose-500">*</span></label>
+                        <div class="flex justify-between items-center px-1">
+                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount <span class="text-rose-500">*</span></label>
+                            <span id="thb-equivalent" class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-md hidden transition-all"></span>
+                        </div>
                         <div class="relative">
-                            <input type="number" id="amount" placeholder="0" class="w-full input-style p-5 text-3xl font-black outline-none text-center" required oninvalid="this.setCustomValidity('Please complete this form.')" oninput="this.setCustomValidity('')">
+                            <input type="number" id="amount" placeholder="0" class="w-full input-style p-5 text-3xl font-black outline-none text-center" required oninput="calculateTHB()">
                             <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">JPY</span>
                         </div>
                     </div>
@@ -465,6 +467,7 @@
         
         let currentEditRowId = null;
         let oldReceiptUrl = "";
+        let currentJpyToThbRate = 0; // เก็บค่าเรทเงิน
         
         const globalColorsMap = { 
             'Food': '#f43f5e',        
@@ -481,6 +484,34 @@
         
         let receiptBase64 = null;
         let receiptName = null;
+
+        // --- ระบบคำนวณเงินบาท (THB) แบบ Real-time ---
+        async function fetchExchangeRate() {
+            try {
+                const res = await fetch('https://api.exchangerate-api.com/v4/latest/JPY');
+                const data = await res.json();
+                currentJpyToThbRate = data.rates.THB;
+            } catch (e) {
+                console.log('Cannot fetch exchange rate');
+            }
+        }
+
+        function calculateTHB() {
+            const amountInput = document.getElementById('amount');
+            const thbEl = document.getElementById('thb-equivalent');
+            
+            amountInput.setCustomValidity(''); 
+            
+            const amountVal = amountInput.value;
+            if (amountVal && amountVal > 0 && currentJpyToThbRate > 0) {
+                const thb = (amountVal * currentJpyToThbRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                thbEl.innerHTML = `≈ ${thb} THB <span class="text-[8px] text-indigo-300 font-normal ml-0.5">(Rate: ${currentJpyToThbRate.toFixed(4)})</span>`;
+                thbEl.classList.remove('hidden');
+            } else {
+                thbEl.classList.add('hidden');
+            }
+        }
+        // ---------------------------------------------
 
         function getBudget() {
             return parseFloat(localStorage.getItem('tripBudget')) || 150000;
@@ -557,6 +588,7 @@
 
         window.onload = function() { 
             updateNetworkStatus(); 
+            fetchExchangeRate(); // โหลดเรทเงินตอนเปิดเว็บ
 
             const loginTimestamp = localStorage.getItem('loginTimestamp');
             const currentUser = localStorage.getItem('currentUser');
@@ -893,6 +925,7 @@
 
             currentEditRowId = rowId;
             document.getElementById('amount').value = item.amount;
+            calculateTHB(); 
             
             let rawDate = new Date(item.date);
             if(!isNaN(rawDate.getTime())) {
@@ -922,6 +955,7 @@
             document.getElementById('submit-btn').innerHTML = 'Save Record';
             document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle text-indigo-500"></i> Add Expense';
             document.getElementById('cancel-edit-btn').classList.add('hidden');
+            document.getElementById('thb-equivalent').classList.add('hidden'); 
             receiptBase64 = null;
             receiptName = null;
             document.getElementById('receipt-text').innerText = "Receipt";
@@ -1021,17 +1055,18 @@
                 }
                 daily[item.date].categories[item.category].amt += amt;
                 
-                // ระบบดึง ID ของรูปจาก Google Drive เพื่อทำภาพ Thumbnail พรีวิว
+                // --- ระบบสร้างพรีวิวรูปภาพขนาดย่อ (Thumbnail) ---
                 const dMatch = item.receipt ? item.receipt.match(/\/d\/(.+?)\//) : null;
                 const thumbHtml = dMatch ? `
                     <div class="mt-2.5">
-                        <a href="${item.receipt}" target="_blank" class="inline-block relative rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <a href="${item.receipt}" target="_blank" class="inline-block relative rounded-[12px] overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                             <img src="https://drive.google.com/uc?export=view&id=${dMatch[1]}" 
                                  class="w-16 h-16 object-cover bg-slate-100" 
                                  onerror="this.parentElement.parentElement.style.display='none'"
                                  alt="Receipt">
                         </a>
                     </div>` : '';
+                // ---------------------------------------------
 
                 const div = document.createElement('div'); 
                 div.className = "modern-card p-4 flex justify-between items-start gap-2"; 
@@ -1290,6 +1325,7 @@
                         showToast("Record saved successfully!"); 
                         e.target.reset(); 
                         document.getElementById('date').value = new Date().toLocaleDateString('en-CA'); 
+                        document.getElementById('thb-equivalent').classList.add('hidden');
                         receiptBase64 = null; 
                         receiptName = null; 
                         document.getElementById('receipt-text').innerText = "Receipt"; 
