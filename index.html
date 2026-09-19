@@ -436,11 +436,11 @@
                             <i id="icon-shared" class="fas fa-users text-slate-300 text-sm transition-colors"></i>
                             <span class="text-[10px] font-black text-slate-600 uppercase">Shared</span>
                         </div>
-                        <!-- สวิตช์ Tax Free -->
+                        <!-- สวิตช์ Tax Free เปลี่ยนเป็น Tax-Refund -->
                         <div class="col-span-2 flex items-center justify-center gap-2 h-full py-3 bg-slate-50 rounded-[16px] border border-slate-100 cursor-pointer" onclick="toggleCheckbox('is-taxfree', 'icon-taxfree', 'text-amber-500')">
                             <input type="checkbox" id="is-taxfree" class="hidden">
                             <i id="icon-taxfree" class="fas fa-tag text-slate-300 text-sm transition-colors"></i>
-                            <span class="text-[10px] font-black text-slate-600 uppercase">Tax-Free</span>
+                            <span class="text-[10px] font-black text-slate-600 uppercase">Tax-Refund</span>
                         </div>
                     </div>
 
@@ -1313,13 +1313,13 @@
                     `; 
                 }
 
-                // Badge สำหรับ Shared / Tax-Free
+                // Badge สำหรับ Shared / Tax-Refund
                 let badgeHtml = '';
                 if(item.isShared) {
                     badgeHtml += `<span class="text-[8px] font-bold bg-sky-50 text-sky-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-sky-100 whitespace-nowrap"><i class="fas fa-users mr-1"></i>Shared</span> `;
                 }
                 if(item.isTaxFree) {
-                    badgeHtml += `<span class="text-[8px] font-bold bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-amber-100 whitespace-nowrap"><i class="fas fa-tag mr-1"></i>Tax-Free</span>`;
+                    badgeHtml += `<span class="text-[8px] font-bold bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-amber-100 whitespace-nowrap"><i class="fas fa-tag mr-1"></i>Tax-Refund</span>`;
                 }
 
                 // History Item Container
