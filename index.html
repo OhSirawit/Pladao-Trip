@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PLADAO TRIP</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#f8fafc">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2060/2060284.png">
+    
+    <script>
+        const manifestJSON = {
+            "name": "PLADAO TRIP",
+            "short_name": "Trip Wallet",
+            "start_url": window.location.href.split('?')[0],
+            "display": "standalone",
+            "background_color": "#f8fafc",
+            "theme_color": "#f8fafc",
+            "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/2060/2060284.png", "sizes": "512x512", "type": "image/png"}]
+        };
+        const stringManifest = JSON.stringify(manifestJSON);
+        const blob = new Blob([stringManifest], {type: 'application/json'});
+        const manifestURL = URL.createObjectURL(blob);
+        document.write('<link rel="manifest" href="' + manifestURL + '">');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif; 
+            color: #0f172a; 
+            -webkit-tap-highlight-color: transparent; 
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc; 
+            overflow-x: hidden; 
+        }
+
+        /* Modern Smooth Cards */
+        .modern-card { 
+            background: #ffffff; 
+            border: 1px solid rgba(226, 232, 240, 0.6); 
+            border-radius: 28px; 
+            box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.05); 
+        }
+        
+        /* Sleek Inputs */
+        .input-style { 
+            background: #f1f5f9; 
+            border: 2px solid transparent; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            appearance: none; 
+            border-radius: 16px; 
+            color: #0f172a;
+        }
+        .input-style:focus { 
+            background: #ffffff; 
+            border-color: #6366f1; 
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1); 
+        }
+        
+        /* Premium Dark Button */
+        .btn-modern { 
+            background: #0f172a; 
+            color: white; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: none;
+            border-radius: 18px;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+        }
+        .btn-modern:active { transform: scale(0.97) translateY(2px); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); }
+        
+        /* Cancel Button for Editing */
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #64748b;
+            border-radius: 18px;
+            transition: all 0.3s ease;
+        }
+        .btn-cancel:active { transform: scale(0.97); }
+
+        /* Floating Pill Nav */
+        .nav-btn { transition: all 0.3s ease; color: #94a3b8; }
+        .nav-active { color: #0f172a !important; font-weight: 800; }
+        .nav-active i { transform: translateY(-2px); color: #6366f1; }
+        .nav-active span { color: #0f172a; }
+        
+        /* Animations */
+        .page-content { display: none; }
+        .page-active { display: block; animation: smoothFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes smoothFade { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        
+        .day-details { display: none; overflow: hidden; }
+        .day-details.active { display: block; animation: expandDown 0.25s ease-out forwards;}
+        @keyframes expandDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .rotate-icon { transition: transform 0.3s ease; }
+        .rotated { transform: rotate(180deg); }
+        
+        .menu-dropdown { opacity: 0; pointer-events: none; transform: translateY(-10px) scale(0.95); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top right;}
+        .menu-dropdown.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
+        
+        #toast-notification { transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .shimmer {
+            background: #f6f7f8;
+            background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-repeat: no-repeat;
+            background-size: 800px 100%; 
+            animation-duration: 1.5s;
+            animation-fill-mode: forwards; 
+            animation-iteration-count: infinite;
+            animation-name: placeholderShimmer;
+            animation-timing-function: linear;
+        }
+        @keyframes placeholderShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
+    </style>
+</head>
+<body class="pb-32 relative">
+
+    <!-- Premium Toast Notification -->
+    <div id="toast-notification" class="fixed top-8 left-1/2 transform -translate-x-1/2 z-[100] -translate-y-32 opacity-0 pointer-events-none w-auto whitespace-nowrap">
+        <div id="toast-bg" class="bg-slate-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-indigo-400 text-lg"></i>
+            <span id="toast-message" class="font-bold text-sm tracking-wide">Success!</span>
+        </div>
+    </div>
+
+    <!-- Elegant Logout Modal -->
+    <div id="logout-modal" class="fixed inset-0 z-[300] bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center px-6 transition-opacity duration-300 opacity-0">
+        <div class="modern-card p-8 w-full max-w-sm text-center transform scale-95 transition-transform duration-300" id="logout-modal-content">
+            <div class="w-16 h-16 bg-slate-100 text-slate-800 rounded-full mx-auto flex items-center justify-center text-2xl mb-5 shadow-sm">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 mb-2 tracking-tight">Sign Out</h3>
+            <p class="text-sm font-medium text-slate-500 mb-8">Are you sure you want to log out of your wallet?</p>
+            <div class="flex gap-3">
+                <button onclick="closeLogoutModal()" class="flex-1 py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors">Cancel</button>
+                <button onclick="confirmLogout()" class="flex-1 py-3.5 rounded-2xl bg-rose-500 text-white font-bold text-sm hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/20">Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Budget Modal -->
+    <div id="budget-modal" class="fixed inset-0 z-[300] bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center px-6 transition-opacity duration-300 opacity-0">
+        <div class="modern-card p-8 w-full max-w-sm text-center transform scale-95 transition-transform duration-300" id="budget-modal-content">
+            <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full mx-auto flex items-center justify-center text-2xl mb-5 shadow-sm">
+                <i class="fas fa-wallet"></i>
+            </div>
+            <h3 class="text-xl font-black text-slate-900 mb-1 tracking-tight">Set Budget</h3>
+            <p class="text-xs font-medium text-slate-500 mb-6">Enter your total trip budget (JPY)</p>
+
+            <div class="relative mb-6">
+                <input type="number" id="new-budget-input" class="w-full input-style p-4 text-2xl font-black text-center text-slate-800 outline-none" placeholder="0">
+                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">JPY</span>
+            </div>
+
+            <div class="flex gap-3">
+                <button onclick="closeBudgetModal()" class="flex-1 py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors">Cancel</button>
+                <button onclick="saveBudget()" class="flex-1 py-3.5 rounded-2xl bg-indigo-500 text-white font-bold text-sm hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimalist Login Page -->
+    <div id="login-page" class="fixed inset-0 z-[200] bg-slate-50 flex items-center justify-center px-6 transition-opacity duration-500">
+        <div class="modern-card p-8 w-full max-w-sm text-center border-none shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
+            <div class="w-20 h-20 bg-slate-900 rounded-[24px] mx-auto flex items-center justify-center text-white text-3xl mb-6 shadow-xl shadow-slate-900/20 transform -rotate-3">
+                <i class="fas fa-plane-departure"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">PLADAO TRIP</h2>
+            <p class="text-indigo-500 text-[10px] font-black uppercase tracking-widest mb-8">Trip Wallet</p>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="text" id="username-input" placeholder="Username" class="w-full input-style p-4 text-center text-lg font-bold outline-none lowercase" required autocapitalize="none">
+                <input type="password" id="pin-input" pattern="[0-9]*" inputmode="numeric" placeholder="PIN Code" class="w-full input-style p-4 text-center text-2xl font-black tracking-[0.2em] outline-none" required>
+                <button type="submit" id="login-btn" class="w-full btn-modern py-4 text-sm flex justify-center items-center gap-2 mt-2">
+                    Unlock Wallet <i class="fas fa-arrow-right text-xs"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="main-app" class="hidden">
+        <!-- Top Navigation -->
+        <nav class="sticky top-0 z-50 px-6 py-4 bg-white/70 backdrop-blur-xl border-b border-slate-100/50 flex justify-between items-center relative">
+            <div class="flex items-center gap-3 relative z-10">
+                <div class="w-10 h-10 bg-slate-900 rounded-[14px] flex items-center justify-center text-white shadow-md shadow-slate-900/10"><i class="fas fa-plane text-sm"></i></div>
+                <span class="font-black text-slate-900 text-sm hidden sm:block tracking-tight">Trip Wallet</span>
+            </div>
+            
+            <div class="absolute left-1/2 transform -translate-x-1/2 text-[11px] font-black tracking-widest z-0 flex items-center gap-1.5 bg-slate-100/80 px-3 py-1.5 rounded-full text-slate-700">
+                <i class="fas fa-location-dot text-indigo-500"></i> TOKYO
+            </div>
+
+            <div class="flex items-center gap-2.5 relative z-10">
+                <span id="display-username" class="text-[10px] font-bold text-slate-600 bg-white shadow-sm px-2.5 py-1.5 rounded-xl border border-slate-100"></span>
+                <button id="menu-btn" onclick="toggleMenu(event)" class="text-slate-500 hover:text-slate-900 transition-colors focus:outline-none w-10 h-10 flex items-center justify-center rounded-[14px] bg-white shadow-sm border border-slate-100">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Dropdown Menu -->
+            <div id="top-menu" class="menu-dropdown absolute top-20 right-6 w-60 max-h-[75vh] overflow-y-auto modern-card p-2 z-50 shadow-[0_15px_40px_rgba(0,0,0,0.1)]">
+                <ul class="flex flex-col space-y-1">
+                    <li>
+                        <button onclick="switchPage('dashboard');" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-chart-pie w-4 text-indigo-500"></i> Analytics</button>
+                    </li>
+                    <div class="border-t border-slate-100 my-1"></div>
+                    
+                    <!-- Airline Ticket Menu -->
+                    <li>
+                        <button onclick="toggleDropdown('airline-menu')" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center justify-between">
+                            <div class="flex items-center gap-3"><i class="fas fa-ticket-alt w-4 text-sky-500"></i> Flight Tickets</div>
+                            <i class="fas fa-chevron-down text-[10px] text-slate-400 transition-transform duration-300" id="icon-airline-menu"></i>
+                        </button>
+                        <div id="airline-menu" class="hidden flex-col pl-11 pr-4 py-2 space-y-4 bg-slate-50/50 rounded-xl mt-1 mb-1 border border-slate-100/50">
+                            <div>
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-2 flex items-center gap-1.5"><i class="fas fa-plane-departure text-slate-300"></i> BKK <i class="fas fa-arrow-right text-[8px]"></i> NRT</p>
+                                <div class="space-y-3">
+                                    <a href="https://drive.google.com/file/d/1B_fLG5nHxuYCMYFWpXHwWHtP42QBGHI0/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Duangkamon</a>
+                                    <a href="https://drive.google.com/file/d/1piK-w0epxvxrKfOHA46WubSP6G8JRTwP/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Chayada</a>
+                                    <a href="https://drive.google.com/file/d/1fmnmdX93P6U7XkKSm83cvo0iDMhmyre3/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Thalerngsak</a>
+                                    <a href="https://drive.google.com/file/d/1Ek96HHGnaL1cEIm1HdRBnXpPCks4qao3/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Paran</a>
+                                    <a href="https://drive.google.com/file/d/12nkElJiNFviM7uiEIAliyjg0NbzyUC5G/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Sirawit</a>
+                                    <a href="https://drive.google.com/file/d/1-TdABp9WSjQ9dU2WlR0xtNiecu37ZyXT/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Thidaporn</a>
+                                </div>
+                            </div>
+                            <div class="pt-3 border-t border-slate-200/60">
+                                <p class="text-[10px] font-black text-slate-400 uppercase mb-2 flex items-center gap-1.5"><i class="fas fa-plane-arrival text-slate-300"></i> NRT <i class="fas fa-arrow-right text-[8px]"></i> BKK</p>
+                                <div class="space-y-3">
+                                    <a href="https://drive.google.com/file/d/19nPpN0u30VGh5p2ADhi1q_QG1NhmxuKS/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Group Ticket (Everyone)</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <div class="border-t border-slate-100 my-1"></div>
+
+                    <li><button onclick="exportToExcel(); toggleMenu();" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-file-export w-4 text-emerald-500"></i> Export Data</button></li>
+                    <div class="border-t border-slate-100 my-1"></div>
+                    
+                    <li><button onclick="logout()" class="w-full text-left px-4 py-3 text-sm font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-sign-out-alt w-4 text-rose-500"></i> Sign Out</button></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- PAGE: HOME -->
+        <div id="page-home" class="page-content page-active max-w-xl mx-auto px-5 py-5 space-y-6">
+            
+            <!-- Premium Balance Card (Dark Slate) -->
+            <div class="modern-card p-7 bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/20 relative overflow-hidden">
+                <div class="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex justify-between items-center mb-2">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Available Balance</p>
+                        <!-- แสดงผล Last Updated : HH:mm:ss -->
+                        <div class="text-right">
+                            <span id="last-updated-text" class="text-[11px] font-bold text-slate-400">Last Updated : --:--:--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-baseline gap-2 mb-6 mt-1">
+                        <h3 id="cash-remaining" class="font-black text-white tracking-tight text-[44px] leading-none">0</h3>
+                        <span class="text-sm font-bold text-slate-400">JPY</span>
+                    </div>
+                    
+                    <div class="w-full bg-slate-800 rounded-full h-2.5 mb-3.5 overflow-hidden border border-slate-700/50">
+                        <div id="budget-progress-bar" class="h-full rounded-full transition-all duration-1000 ease-out bg-indigo-500 relative" style="width: 100%">
+                            <div class="absolute top-0 left-0 w-full h-full bg-white/20 transform -skew-x-12 animate-[placeholderShimmer_2s_infinite]"></div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center text-[11px] font-bold border-t border-slate-800 pt-3">
+                        <span class="text-slate-400">Spent: <span id="cash-used-text" class="text-white">0</span></span>
+                        <span class="text-slate-400 flex items-center gap-1">Budget: <span class="text-white cursor-pointer hover:text-indigo-300 transition-colors flex items-center gap-1" onclick="openBudgetModal()"><span id="budget-text">150,000</span> <i class="fas fa-pencil-alt text-[9px] text-slate-500 bg-slate-800 p-1.5 rounded-full border border-slate-700"></i></span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sleek Expense Form -->
+            <section class="modern-card p-7">
+                <div class="flex justify-between items-center mb-5">
+                    <h3 id="form-title" class="text-sm font-black text-slate-900 flex items-center gap-2 tracking-tight"><i class="fas fa-plus-circle text-indigo-500"></i> Add Expense</h3>
+                </div>
+                
+                <form id="expense-form" class="space-y-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Amount <span class="text-rose-500">*</span></label>
+                        <div class="relative">
+                            <input type="number" id="amount" placeholder="0" class="w-full input-style p-5 text-3xl font-black outline-none text-center" required oninvalid="this.setCustomValidity('Please complete this form.')" oninput="this.setCustomValidity('')">
+                            <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">JPY</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mt-2">
+                        <div class="space-y-1.5"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Date</label><input type="date" id="date" class="w-full input-style p-3.5 text-[13px] font-bold outline-none" required></div>
+                        <div class="space-y-1.5"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment</label>
+                            <select id="payment" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer">
+                                <option value="Cash">💵 Cash</option>
+                                <option value="Credit Card">💳 Credit Card</option>
+                                <option value="Travel Card">🌍 Travel Card</option>
+                                <option value="IC Card">🚉 IC Card</option>
+                                <option value="QR Code">📲 QR Code</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-1.5"><label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
+                        <select id="category" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer" required>
+                            <optgroup label="EXPENSES">
+                                <option value="Food">🍱 Food & Dining</option>
+                                <option value="Transportation">🚆 Transport</option>
+                                <option value="Dessert/Beverage">☕ Cafe / Drinks</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Admission Fee">🎟️ Admission</option>
+                                <option value="Tops up IC Card">🔋 Top up IC Card</option>
+                                <option value="Pre-Order">📦 Pre-Order</option>
+                                <option value="Gasoline">⛽ Gasoline</option>
+                                <option value="Toll / ETC">🛣️ Toll / ETC</option>
+                                <option value="Other">✨ Others</option>
+                            </optgroup>
+                            <optgroup label="REFUND / ADVANCE">
+                                <option value="Tax refund">💰 Tax Refund</option><option value="Advanced">⏳ Advanced</option><option value="Adjustment">⚙️ Adjustment</option><option value="Refund Pre-Order">↩️ Refund Pre-Order</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    
+                    <div class="space-y-1.5">
+                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Note <span class="text-rose-500">*</span></label>
+                        <input type="text" id="details" placeholder="What did you buy?" class="w-full input-style p-4 text-[13px] font-bold outline-none" required>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3 pt-2">
+                        <div class="relative">
+                            <input type="file" id="receipt-file" accept="image/*" capture="environment" class="hidden">
+                            <label for="receipt-file" id="receipt-label" class="flex items-center justify-center gap-2 h-full py-4 border-2 border-dashed border-indigo-200 rounded-[16px] cursor-pointer bg-indigo-50/50 hover:bg-indigo-50 transition-colors">
+                                <i class="fas fa-camera text-indigo-500 text-sm"></i>
+                                <span class="text-[10px] text-indigo-700 font-bold truncate max-w-[80px]" id="receipt-text">Receipt</span>
+                            </label>
+                        </div>
+                        <div class="flex items-center justify-center gap-2 h-full py-4 bg-slate-50 rounded-[16px] border border-slate-100">
+                            <input type="checkbox" id="save-location" checked class="w-4 h-4 accent-slate-900 rounded cursor-pointer">
+                            <label for="save-location" class="text-[10px] font-black text-slate-600 uppercase cursor-pointer">Save GPS</label>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 mt-5">
+                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden w-1/3 btn-cancel py-4 text-sm font-bold flex justify-center items-center">
+                            Cancel
+                        </button>
+                        <button type="submit" id="submit-btn" class="flex-1 btn-modern py-4 text-sm font-bold flex justify-center items-center gap-2">
+                            Save Record
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <!-- PAGE: HISTORY -->
+        <div id="page-history" class="page-content max-w-xl mx-auto px-5 py-4 space-y-4">
+            <div class="flex justify-between items-center mb-5 px-1">
+                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Timeline</h2>
+                <div class="relative bg-white rounded-xl border border-slate-200 shadow-sm">
+                    <select id="sort-filter" onchange="updateUI()" class="bg-transparent text-slate-700 text-[10px] font-bold px-3 py-2.5 outline-none appearance-none cursor-pointer pr-8">
+                        <option value="latest" selected>⏱️ Latest</option>
+                        <option value="date">📅 Date</option>
+                        <option value="payment">💳 Payment</option>
+                        <option value="category">📂 Category</option>
+                        <option value="price-high">💰 Price (High)</option>
+                        <option value="price-low">💰 Price (Low)</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400"><i class="fas fa-chevron-down text-[8px]"></i></div>
+                </div>
+            </div>
+            
+            <div class="relative mb-4">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-slate-400 text-sm"></i>
+                </div>
+                <input type="text" id="search-input" onkeyup="updateUI()" placeholder="Search expenses..." class="w-full input-style py-3.5 pl-10 pr-4 text-sm font-medium outline-none">
+            </div>
+
+            <div id="history-list" class="space-y-3"></div>
+        </div>
+        
+        <!-- PAGE: SUMMARY -->
+        <div id="page-analytics" class="page-content max-w-xl mx-auto px-5 py-4 space-y-5">
+            <h2 class="text-2xl font-black text-slate-900 tracking-tight px-1">Summary</h2>
+            
+            <div class="modern-card p-6 text-center space-y-4 relative overflow-hidden bg-white">
+                <div class="flex justify-between text-xs font-bold text-slate-500"><span>Total Spent</span><span id="gross-total" class="text-slate-800">0 JPY</span></div>
+                <div class="flex justify-between text-xs font-bold text-emerald-500"><span>Refunds</span><span id="refund-total">0 JPY</span></div>
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-end">
+                    <div class="flex flex-col text-left">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Net Spending</span>
+                        <span id="total-spent" class="text-4xl font-black text-slate-900 leading-none tracking-tight">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest pt-2 px-1">By User</h3>
+            <div id="user-summary-container" class="grid grid-cols-2 gap-3"></div>
+
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest pt-2 px-1">By Payment</h3>
+            <div id="payment-summary-container" class="grid grid-cols-2 gap-3"></div>
+            
+            <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest pt-2 px-1">Daily Log</h3>
+            <div id="stats-container" class="space-y-3"></div>
+        </div>
+
+        <!-- PAGE: DASHBOARD -->
+        <div id="page-dashboard" class="page-content max-w-xl mx-auto px-5 py-4 space-y-5">
+            <div class="flex justify-between items-center mb-4 px-1">
+                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Analytics</h2>
+                <button onclick="switchPage('home')" class="text-slate-400 hover:text-indigo-500 transition-colors w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
+            </div>
+            
+            <div class="modern-card p-6 bg-white">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-center mb-5">Category Overview</h3>
+                <div class="relative w-full max-w-[200px] mx-auto">
+                    <canvas id="overallCategoryChart"></canvas>
+                </div>
+                <div id="category-dashboard-list" class="mt-7 space-y-1 border-t border-slate-100 pt-4"></div>
+            </div>
+
+            <div class="modern-card p-6 bg-white">
+                <div class="flex justify-between items-center mb-5 border-b border-slate-100 pb-3">
+                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Daily Focus</h3>
+                    <div class="relative bg-slate-50 rounded-lg border border-slate-100">
+                        <select id="dashboard-date-filter" onchange="updateDailyCategoryChart()" class="bg-transparent text-slate-700 text-[10px] font-bold px-3 py-1.5 outline-none appearance-none pr-7 cursor-pointer">
+                            <option value="">No Data</option>
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-slate-400"><i class="fas fa-chevron-down text-[8px]"></i></div>
+                    </div>
+                </div>
+                <div class="relative w-full max-w-[200px] mx-auto pt-2">
+                    <canvas id="dailyCategoryChart"></canvas>
+                </div>
+                <div id="daily-category-list" class="mt-7 space-y-1 border-t border-slate-100 pt-4"></div>
+            </div>
+        </div>
+
+        <!-- Floating Minimalist Pill Navigation -->
+        <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[360px] bg-white/80 backdrop-blur-xl border border-white shadow-[0_10px_40px_rgba(15,23,42,0.08)] rounded-[24px] p-1.5 flex justify-between items-center">
+            <button onclick="switchPage('home')" id="nav-home" class="nav-btn w-1/3 py-3 rounded-[20px] flex flex-col items-center gap-1 nav-active hover:bg-slate-50 transition-colors">
+                <i class="fas fa-plus text-[18px]"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Add</span>
+            </button>
+            <button onclick="switchPage('history')" id="nav-history" class="nav-btn w-1/3 py-3 rounded-[20px] flex flex-col items-center gap-1 hover:bg-slate-50 transition-colors">
+                <i class="fas fa-list-ul text-[18px]"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">History</span>
+            </button>
+            <button onclick="switchPage('analytics')" id="nav-analytics" class="nav-btn w-1/3 py-3 rounded-[20px] flex flex-col items-center gap-1 hover:bg-slate-50 transition-colors">
+                <i class="fas fa-chart-pie text-[18px]"></i>
+                <span class="text-[9px] font-bold uppercase tracking-wider">Stats</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let expenses = []; 
+        let myOverallCategoryChart = null; 
+        let myDailyCategoryChart = null; 
+        let globalDailyCategoryStats = {};
+        
+        let currentEditRowId = null;
+        let oldReceiptUrl = "";
+        
+        const globalColorsMap = { 
+            'Food': '#f43f5e',        
+            'Transportation': '#3b82f6', 
+            'Gasoline': '#f97316',    
+            'Toll / ETC': '#8b5cf6',  
+            'Dessert/Beverage': '#ec4899', 
+            'Shopping': '#10b981',    
+            'Admission Fee': '#14b8a6', 
+            'Tops up IC Card': '#eab308', 
+            'Pre-Order': '#6366f1',   
+            'Other': '#64748b'        
+        };
+        
+        let receiptBase64 = null;
+        let receiptName = null;
+
+        function getBudget() {
+            return parseFloat(localStorage.getItem('tripBudget')) || 150000;
+        }
+
+        function openBudgetModal() {
+            const currentBudget = getBudget();
+            document.getElementById('new-budget-input').value = currentBudget;
+            
+            const modal = document.getElementById('budget-modal'); 
+            const content = document.getElementById('budget-modal-content'); 
+            modal.classList.remove('hidden'); 
+            setTimeout(() => { 
+                modal.classList.remove('opacity-0'); 
+                content.classList.remove('scale-95'); 
+                content.classList.add('scale-100'); 
+            }, 10); 
+        }
+
+        function closeBudgetModal() {
+            const modal = document.getElementById('budget-modal'); 
+            const content = document.getElementById('budget-modal-content'); 
+            modal.classList.add('opacity-0'); 
+            content.classList.remove('scale-100'); 
+            content.classList.add('scale-95'); 
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+            }, 300); 
+        }
+
+        function saveBudget() {
+            const inputVal = document.getElementById('new-budget-input').value;
+            const newBudget = parseFloat(inputVal);
+            
+            if (!isNaN(newBudget) && newBudget > 0) {
+                localStorage.setItem('tripBudget', newBudget);
+                updateUI();
+                closeBudgetModal();
+                showToast("Budget updated successfully!");
+            } else {
+                showToast("Please enter a valid amount!", true);
+            }
+        }
+
+        window.onload = function() { 
+            const loginTimestamp = localStorage.getItem('loginTimestamp');
+            const currentUser = localStorage.getItem('currentUser');
+            const now = Date.now();
+            const THIRTY_MINUTES = 30 * 60 * 1000;
+
+            if (loginTimestamp && currentUser && (now - parseInt(loginTimestamp)) < THIRTY_MINUTES) {
+                localStorage.setItem('loginTimestamp', now.toString());
+                document.getElementById('login-page').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                
+                let todayStr = new Date().toLocaleDateString('en-CA'); 
+                document.getElementById('date').value = todayStr; 
+                
+                document.getElementById('display-username').innerHTML = `<i class="fas fa-user mr-1 text-slate-400"></i>${currentUser.toUpperCase()}`;
+                loadDataFromSheet(); 
+            } else {
+                localStorage.removeItem('loginTimestamp');
+                localStorage.removeItem('currentUser');
+                document.getElementById('login-page').classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+
+            document.getElementById('receipt-file').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                document.getElementById('receipt-text').innerText = file.name;
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    receiptBase64 = event.target.result;
+                    receiptName = file.name;
+                };
+                reader.readAsDataURL(file);
+            });
+        };
+
+        document.addEventListener('click', function(event) {
+            const menu = document.getElementById('top-menu');
+            const menuBtn = document.getElementById('menu-btn');
+            if (menu && menuBtn) {
+                if (menu.classList.contains('active') && !menu.contains(event.target) && !menuBtn.contains(event.target)) {
+                    menu.classList.remove('active');
+                }
+            }
+        });
+
+        function handleLogin(e) { 
+            e.preventDefault(); 
+            const username = document.getElementById('username-input').value; 
+            const pin = document.getElementById('pin-input').value; 
+            const btn = document.getElementById('login-btn'); 
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin text-lg"></i>'; 
+            
+            google.script.run.withSuccessHandler(function(res) { 
+                if(res.isValid) { 
+                    localStorage.setItem('loginTimestamp', Date.now().toString()); 
+                    localStorage.setItem('currentUser', res.username.toUpperCase());
+                    document.getElementById('display-username').innerHTML = `<i class="fas fa-user mr-1 text-slate-400"></i>${res.username.toUpperCase()}`;
+                    document.getElementById('login-page').classList.add('opacity-0'); 
+                    setTimeout(() => { 
+                        document.getElementById('login-page').classList.add('hidden'); 
+                        document.getElementById('main-app').classList.remove('hidden'); 
+                        document.getElementById('date').value = new Date().toLocaleDateString('en-CA');
+                        loadDataFromSheet(); 
+                    }, 500); 
+                } else { 
+                    showToast("Invalid Username or Password!", true); 
+                    document.getElementById('pin-input').value = ""; 
+                    btn.innerHTML = 'Unlock Wallet <i class="fas fa-arrow-right text-xs"></i>'; 
+                } 
+            }).verifyLogin(username, pin); 
+        }
+
+        function logout() { 
+            const modal = document.getElementById('logout-modal'); 
+            const content = document.getElementById('logout-modal-content'); 
+            modal.classList.remove('hidden'); 
+            setTimeout(() => { 
+                modal.classList.remove('opacity-0'); 
+                content.classList.remove('scale-95'); 
+                content.classList.add('scale-100'); 
+            }, 10); 
+            toggleMenu(); 
+        }
+
+        function closeLogoutModal() { 
+            const modal = document.getElementById('logout-modal'); 
+            const content = document.getElementById('logout-modal-content'); 
+            modal.classList.add('opacity-0'); 
+            content.classList.remove('scale-100'); 
+            content.classList.add('scale-95'); 
+            setTimeout(() => { 
+                modal.classList.add('hidden'); 
+            }, 300); 
+        }
+
+        function confirmLogout() { 
+            localStorage.removeItem('loginTimestamp'); 
+            localStorage.removeItem('currentUser');
+            location.reload(); 
+        }
+
+        function showToast(message, isError = false) { 
+            const toast = document.getElementById('toast-notification'); 
+            const toastMsg = document.getElementById('toast-message'); 
+            const toastIcon = document.getElementById('toast-icon'); 
+            
+            toastMsg.innerText = message; 
+            
+            if (isError) { 
+                toastIcon.className = "fas fa-exclamation-circle text-rose-400 text-lg"; 
+            } else { 
+                toastIcon.className = "fas fa-check-circle text-indigo-400 text-lg"; 
+            } 
+            
+            toast.classList.remove('-translate-y-32', 'opacity-0'); 
+            toast.classList.add('translate-y-0', 'opacity-100'); 
+            
+            setTimeout(() => { 
+                toast.classList.remove('translate-y-0', 'opacity-100'); 
+                toast.classList.add('-translate-y-32', 'opacity-0'); 
+            }, 3000); 
+        }
+
+        function toggleDropdown(id) { 
+            const el = document.getElementById(id); 
+            const icon = document.getElementById('icon-' + id);
+            if(el.classList.contains('hidden')) { 
+                el.classList.remove('hidden'); 
+                el.classList.add('flex'); 
+                if(icon) icon.classList.add('rotate-180');
+            } else { 
+                el.classList.add('hidden'); 
+                el.classList.remove('flex'); 
+                if(icon) icon.classList.remove('rotate-180');
+            } 
+        }
+
+        function toggleMenu(e) { 
+            if(e) e.stopPropagation(); 
+            document.getElementById('top-menu').classList.toggle('active'); 
+        }
+
+        function switchPage(pageId) { 
+            if(localStorage.getItem('loginTimestamp')) { 
+                localStorage.setItem('loginTimestamp', Date.now().toString()); 
+            } 
+            
+            ['home', 'history', 'analytics', 'dashboard'].forEach(id => { 
+                const pageEl = document.getElementById('page-' + id); 
+                if(pageEl) pageEl.classList.remove('page-active'); 
+                const navEl = document.getElementById('nav-' + id); 
+                if(navEl) navEl.classList.remove('nav-active'); 
+            }); 
+            
+            document.getElementById('page-' + pageId).classList.add('page-active'); 
+            const targetNav = document.getElementById('nav-' + pageId); 
+            if(targetNav) targetNav.classList.add('nav-active'); 
+            
+            document.getElementById('top-menu').classList.remove('active'); 
+            
+            if (pageId === 'history' || pageId === 'analytics' || pageId === 'dashboard') {
+                updateUI(); 
+            }
+            window.scrollTo(0,0); 
+        }
+
+        function loadDataFromSheet() { 
+            const list = document.getElementById('history-list'); 
+            if(list) list.innerHTML = '<div class="text-center p-10 text-slate-400 font-bold text-xs"><i class="fas fa-circle-notch fa-spin text-indigo-500 text-3xl mb-4"></i><br>Syncing Data...</div>'; 
+            
+            google.script.run.withSuccessHandler(function(data) { 
+                if(data && data.length > 0) { 
+                    expenses = data; 
+                } 
+                updateUI(); 
+                
+                // Update Last Updated Format -> Last Updated : 14:20:11
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const updatedEl = document.getElementById('last-updated-text');
+                if(updatedEl) updatedEl.innerText = 'Last Updated : ' + timeStr;
+                
+            }).getExpensesFromSheet(); 
+        }
+
+        function toggleDay(date) { 
+            const el = document.getElementById('details-' + date); 
+            const icon = document.getElementById('icon-' + date); 
+            if(el) el.classList.toggle('active'); 
+            if(icon) icon.classList.toggle('rotated'); 
+        }
+
+        function getIcon(cat) { 
+            const icons = { 
+                'Food': 'fa-utensils', 
+                'Transportation': 'fa-train',
+                'Gasoline': 'fa-gas-pump',
+                'Toll / ETC': 'fa-road',
+                'Dessert/Beverage': 'fa-mug-hot', 
+                'Shopping': 'fa-bag-shopping', 
+                'Admission Fee': 'fa-ticket-alt', 
+                'Tops up IC Card': 'fa-battery-full', 
+                'Pre-Order': 'fa-box', 
+                'Refund Pre-Order': 'fa-undo-alt', 
+                'Tax refund': 'fa-hand-holding-dollar', 
+                'Advanced': 'fa-hourglass-half', 
+                'Adjustment': 'fa-sliders', 
+                'Other': 'fa-receipt' 
+            }; 
+            return icons[cat] || 'fa-receipt'; 
+        }
+
+        function renderDoughnutChart(ctxId, chartVar, dataObj) { 
+            const ctx = document.getElementById(ctxId); 
+            if(!ctx) return chartVar; 
+            
+            const labels = Object.keys(dataObj); 
+            const dataValues = Object.values(dataObj); 
+            const bgColors = labels.map(cat => globalColorsMap[cat] || '#94a3b8'); 
+            
+            if(chartVar) chartVar.destroy(); 
+            
+            Chart.defaults.font.family = "'Plus Jakarta Sans', 'Kanit', sans-serif";
+            
+            return new Chart(ctx, { 
+                type: 'doughnut', 
+                data: { 
+                    labels: labels, 
+                    datasets: [{ 
+                        data: dataValues, 
+                        backgroundColor: bgColors, 
+                        borderWidth: 3, 
+                        borderColor: '#ffffff',
+                        hoverOffset: 6 
+                    }] 
+                }, 
+                options: { 
+                    responsive: true, 
+                    cutout: '72%', 
+                    plugins: { 
+                        legend: { display: false }, 
+                        tooltip: { 
+                            backgroundColor: '#0f172a',
+                            padding: 12,
+                            cornerRadius: 12,
+                            callbacks: { 
+                                label: function(context) { 
+                                    return ' ' + new Intl.NumberFormat('en-US').format(context.parsed) + ' JPY'; 
+                                } 
+                            } 
+                        } 
+                    } 
+                } 
+            }); 
+        }
+
+        function updateDailyCategoryChart() { 
+            const dateStr = document.getElementById('dashboard-date-filter').value; 
+            const dataObj = globalDailyCategoryStats[dateStr] || {}; 
+            myDailyCategoryChart = renderDoughnutChart('dailyCategoryChart', myDailyCategoryChart, dataObj); 
+            
+            const listContainer = document.getElementById('daily-category-list'); 
+            listContainer.innerHTML = ''; 
+            
+            const sortedCat = Object.keys(dataObj).map(k => ({label: k, val: dataObj[k]})).sort((a,b) => b.val - a.val); 
+            
+            if(sortedCat.length === 0) { 
+                listContainer.innerHTML = '<div class="text-center text-xs text-slate-400 py-4 font-medium">No transactions on this date</div>'; 
+                return; 
+            } 
+            
+            const dailyTotal = sortedCat.reduce((sum, item) => sum + item.val, 0);
+            
+            sortedCat.forEach(item => { 
+                const percent = dailyTotal > 0 ? ((item.val / dailyTotal) * 100).toFixed(1) : 0;
+                const displayPercent = percent.endsWith('.0') ? percent.slice(0, -2) : percent;
+
+                const div = document.createElement('div'); 
+                div.className = "flex justify-between items-center text-xs px-2 py-3 border-b border-slate-50 last:border-0"; 
+                div.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-3.5 h-3.5 rounded-full shadow-sm" style="background-color: ${globalColorsMap[item.label] || '#94a3b8'}"></span>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="font-bold text-slate-700">${item.label}</span>
+                            <span class="text-[10px] text-slate-400 font-medium">(${displayPercent}%)</span>
+                        </div>
+                    </div>
+                    <span class="font-black text-slate-900">${item.val.toLocaleString()} JPY</span>`; 
+                listContainer.appendChild(div); 
+            }); 
+        }
+
+        function editItem(rowId) {
+            const item = expenses.find(e => e.rowId === rowId);
+            if(!item) return;
+
+            currentEditRowId = rowId;
+            document.getElementById('amount').value = item.amount;
+            
+            let rawDate = new Date(item.date);
+            if(!isNaN(rawDate.getTime())) {
+                document.getElementById('date').value = rawDate.toLocaleDateString('en-CA');
+            } else {
+                document.getElementById('date').value = item.date;
+            }
+
+            document.getElementById('payment').value = item.payment;
+            document.getElementById('category').value = item.category;
+            document.getElementById('details').value = item.details;
+            oldReceiptUrl = item.receipt;
+            
+            document.getElementById('submit-btn').innerHTML = 'Update Record <i class="fas fa-save"></i>';
+            document.getElementById('form-title').innerHTML = '<i class="fas fa-edit text-indigo-500"></i> Edit Expense';
+            
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+
+            switchPage('home');
+        }
+
+        function cancelEdit() {
+            currentEditRowId = null;
+            oldReceiptUrl = "";
+            document.getElementById('expense-form').reset();
+            document.getElementById('date').value = new Date().toLocaleDateString('en-CA');
+            document.getElementById('submit-btn').innerHTML = 'Save Record';
+            document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle text-indigo-500"></i> Add Expense';
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+            receiptBase64 = null;
+            receiptName = null;
+            document.getElementById('receipt-text').innerText = "Receipt";
+        }
+
+        function updateUI() {
+            const list = document.getElementById('history-list');
+            const stats = document.getElementById('stats-container');
+            const pSum = document.getElementById('payment-summary-container');
+            const uSum = document.getElementById('user-summary-container');
+            
+            if(!list || !stats) return; 
+            
+            list.innerHTML = ''; 
+            stats.innerHTML = ''; 
+            pSum.innerHTML = '';
+            if(uSum) uSum.innerHTML = '';
+            
+            let gross = 0, refund = 0, cashUsed = 0; 
+            const daily = {};
+            const payStats = { 'Cash': 0, 'Credit Card': 0, 'Travel Card': 0, 'IC Card': 0, 'QR Code': 0 };
+            const userStats = {};
+            
+            const searchTerm = document.getElementById('search-input') ? document.getElementById('search-input').value.toLowerCase() : '';
+            
+            let filteredExpenses = expenses.filter(item => {
+                if(!searchTerm) return true;
+                return (item.category.toLowerCase().includes(searchTerm) || 
+                        item.details.toLowerCase().includes(searchTerm) || 
+                        item.payment.toLowerCase().includes(searchTerm) ||
+                        item.amount.toString().includes(searchTerm));
+            });
+
+            let sortType = document.getElementById('sort-filter') ? document.getElementById('sort-filter').value : 'latest';
+            
+            filteredExpenses.sort((a,b) => {
+                let dateB = new Date(b.date + ' ' + (b.time || '00:00')); 
+                let dateA = new Date(a.date + ' ' + (a.time || '00:00'));
+                let isRefA = ["Tax refund", "Advanced", "Adjustment", "Refund Pre-Order"].includes(a.category); 
+                let amtA = parseFloat(a.amount) || 0; 
+                let realAmtA = isRefA ? amtA : -amtA;
+                let isRefB = ["Tax refund", "Advanced", "Adjustment", "Refund Pre-Order"].includes(b.category); 
+                let amtB = parseFloat(b.amount) || 0; 
+                let realAmtB = isRefB ? amtB : -amtB;
+                
+                if (sortType === 'latest') return expenses.indexOf(b) - expenses.indexOf(a); 
+                if (sortType === 'date') return dateB - dateA; 
+                if (sortType === 'payment') return a.payment === b.payment ? dateB - dateA : a.payment.localeCompare(b.payment); 
+                if (sortType === 'category') return a.category === b.category ? dateB - dateA : a.category.localeCompare(b.category); 
+                if (sortType === 'price-high') return realAmtB - realAmtA; 
+                if (sortType === 'price-low') return realAmtA - realAmtB; 
+                return 0;
+            });
+            
+            const categoryStats = {}; 
+            globalDailyCategoryStats = {};
+
+            filteredExpenses.forEach((item) => {
+                const isRef = ["Tax refund", "Advanced", "Adjustment", "Refund Pre-Order"].includes(item.category);
+                const amt = parseFloat(item.amount) || 0;
+                const impact = isRef ? -amt : amt;
+                
+                if (isRef) { 
+                    refund += amt; 
+                } else { 
+                    gross += amt; 
+                    if (!categoryStats[item.category]) categoryStats[item.category] = 0; 
+                    categoryStats[item.category] += amt; 
+                    
+                    if (!globalDailyCategoryStats[item.date]) globalDailyCategoryStats[item.date] = {}; 
+                    if (!globalDailyCategoryStats[item.date][item.category]) globalDailyCategoryStats[item.date][item.category] = 0; 
+                    globalDailyCategoryStats[item.date][item.category] += amt; 
+                }
+                
+                let uKey = item.username.toUpperCase();
+                if (!userStats[uKey]) userStats[uKey] = 0;
+                userStats[uKey] += impact;
+
+                let pKey = item.payment; 
+                if (pKey === "Visa/Master" || pKey === "Visa / Master") pKey = "Credit Card"; 
+                if (pKey === "JCB Card-Thida" || pKey === "JCB Card-OHSirawit" || pKey === "JCB" || pKey === "Refund-JCB") pKey = "Credit Card";
+                
+                if (!payStats.hasOwnProperty(pKey)) payStats[pKey] = 0; 
+                if (pKey === "Cash") cashUsed += impact; 
+                payStats[pKey] += impact;
+                
+                if (!daily[item.date]) daily[item.date] = { total: 0, categories: {} }; 
+                daily[item.date].total += impact; 
+                
+                if (!daily[item.date].categories[item.category]) {
+                    daily[item.date].categories[item.category] = { amt: 0, isRef: isRef };
+                }
+                daily[item.date].categories[item.category].amt += amt;
+                
+                const div = document.createElement('div'); 
+                div.className = "modern-card p-4 flex justify-between items-center"; 
+                div.innerHTML = `
+                    <div class="flex gap-4 items-center text-left">
+                        <div class="w-12 h-12 ${isRef ? 'bg-emerald-50 text-emerald-500 border border-emerald-100' : 'bg-slate-50 text-slate-700 border border-slate-100'} rounded-[16px] flex items-center justify-center">
+                            <i class="fas ${getIcon(item.category)} text-[18px]"></i>
+                        </div>
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <p class="font-bold text-slate-800 text-[13px] leading-tight">${item.category}</p>
+                                <span class="text-[8px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-slate-200 whitespace-nowrap">${item.payment}</span>
+                                <span class="text-[8px] font-bold bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-indigo-100 whitespace-nowrap"><i class="fas fa-user mr-1 text-indigo-400"></i>${item.username || 'ADMIN'}</span>
+                            </div>
+                            <p class="text-[11px] font-medium text-slate-400 mt-1 truncate max-w-[140px]">${item.details || "-"}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[16px] font-black ${isRef ? 'text-emerald-500' : 'text-slate-900'}">${isRef ? '+' : '-'}${amt.toLocaleString()}</p>
+                        <div class="flex justify-end gap-3 mt-1 items-center">
+                            ${item.receipt ? `<a href="${item.receipt}" target="_blank" class="text-slate-300 hover:text-indigo-500 transition-colors"><i class="fas fa-image text-[13px]"></i></a>` : ''}
+                            ${item.location ? `<a href="${item.location}" target="_blank" class="text-slate-300 hover:text-indigo-500 transition-colors"><i class="fas fa-location-dot text-[13px]"></i></a>` : ''}
+                            <button onclick="editItem(${item.rowId})" class="text-slate-200 hover:text-indigo-500 transition-colors ml-1"><i class="fas fa-pencil-alt text-[13px]"></i></button>
+                            <button onclick="deleteItem(${item.rowId})" class="text-slate-200 hover:text-rose-500 transition-colors ml-1"><i class="fas fa-trash-alt text-[13px]"></i></button>
+                        </div>
+                    </div>`; 
+                list.appendChild(div);
+            });
+
+            if(filteredExpenses.length === 0 && list) {
+                list.innerHTML = '<div class="text-center p-8 text-slate-400 font-bold text-xs"><i class="fas fa-search text-2xl mb-2 text-slate-300"></i><br>No matching records</div>';
+            }
+
+            const dateDropdown = document.getElementById('dashboard-date-filter'); 
+            if (dateDropdown) { 
+                const currentSelectedDate = dateDropdown.value; 
+                dateDropdown.innerHTML = ''; 
+                const sortedDates = Object.keys(globalDailyCategoryStats).sort((a,b) => new Date(b) - new Date(a)); 
+                
+                if(sortedDates.length === 0) { 
+                    dateDropdown.innerHTML = '<option value="">No Data</option>'; 
+                } else { 
+                    sortedDates.forEach(date => { 
+                        const opt = document.createElement('option'); 
+                        opt.value = date; 
+                        opt.text = date; 
+                        if(date === currentSelectedDate) opt.selected = true; 
+                        dateDropdown.appendChild(opt); 
+                    }); 
+                    if(!currentSelectedDate || !globalDailyCategoryStats[currentSelectedDate]) { 
+                        dateDropdown.value = sortedDates[0]; 
+                    } 
+                } 
+            }
+            
+            const currentBudget = getBudget();
+
+            if (uSum) {
+                Object.entries(userStats).sort((a,b) => b[1] - a[1]).forEach(([user, total]) => {
+                    const uDiv = document.createElement('div');
+                    uDiv.className = "modern-card p-4 text-left border border-indigo-100/50 bg-indigo-50/20 shadow-sm"; 
+                    uDiv.innerHTML = `
+                        <div class="flex items-center gap-1.5 mb-1.5">
+                            <i class="fas fa-user-circle text-indigo-400"></i>
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">${user}</span>
+                        </div>
+                        <p class="text-lg font-black text-slate-800 leading-none">${total.toLocaleString()}</p>
+                    `;
+                    uSum.appendChild(uDiv);
+                });
+            }
+
+            Object.entries(payStats).forEach(([method, total]) => { 
+                if (total !== 0 || method === 'Cash' || method === 'Credit Card') { 
+                    const payDiv = document.createElement('div'); 
+                    payDiv.className = "modern-card p-5 text-left border border-slate-100 shadow-sm"; 
+                    let displayName = method; 
+                    let bal = ""; 
+                    if (method === "Cash") bal = `<p class="text-[10px] font-bold text-indigo-500 mt-1.5">Remain: ${(currentBudget - total).toLocaleString()}</p>`; 
+                    payDiv.innerHTML = `
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${displayName}</span>
+                        <p class="text-xl font-black text-slate-900 mt-1.5 leading-none">${total.toLocaleString()}</p>
+                        ${bal}`; 
+                    pSum.appendChild(payDiv); 
+                } 
+            });
+            
+            Object.keys(daily).sort((a,b) => new Date(b) - new Date(a)).forEach(date => { 
+                const data = daily[date];
+                const mainDiv = document.createElement('div'); 
+                mainDiv.className = "modern-card overflow-hidden shadow-sm mb-4 border border-slate-100"; 
+                mainDiv.innerHTML = `
+                    <div onclick="toggleDay('${date}')" class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                        <div class="flex items-center gap-3.5">
+                            <div class="w-11 h-11 rounded-[14px] bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-slate-900/10">${date.split('-')[2]}</div>
+                            <p class="text-xs font-black text-slate-500 uppercase tracking-widest">${date}</p>
+                        </div>
+                        <div class="flex items-center gap-3.5 text-right">
+                            <p class="text-[17px] font-black text-slate-900">${data.total.toLocaleString()}</p>
+                            <i id="icon-${date}" class="fas fa-chevron-down text-slate-300 text-sm rotate-icon"></i>
+                        </div>
+                    </div>
+                    <div id="details-${date}" class="day-details pb-4 px-5 bg-slate-50/50 border-t border-slate-100 text-left">
+                        ${Object.keys(data.categories).map(cat => {
+                            const catInfo = data.categories[cat];
+                            return `
+                            <div class="flex justify-between items-center text-xs py-3 border-b border-slate-200/50 last:border-0">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: ${globalColorsMap[cat] || '#94a3b8'}"></span>
+                                    <span class="font-bold text-slate-700">${cat}</span>
+                                </div>
+                                <span class="font-black ${catInfo.isRef ? 'text-emerald-500' : 'text-slate-800'}">${catInfo.isRef ? '+' : '-'}${catInfo.amt.toLocaleString()}</span>
+                            </div>`;
+                        }).join('')}
+                    </div>`; 
+                stats.appendChild(mainDiv); 
+            });
+
+            const remaining = currentBudget - cashUsed; 
+            let percent = remaining / currentBudget; 
+            percent = Math.max(0, Math.min(1, percent)); 
+            
+            const bar = document.getElementById('budget-progress-bar');
+            if(bar) { 
+                setTimeout(() => { bar.style.width = (percent * 100) + '%'; }, 100); 
+                
+                if (remaining <= (currentBudget * 0.1)) bar.style.background = "#ef4444"; 
+                else if (remaining <= (currentBudget * 0.3)) bar.style.background = "#f59e0b"; 
+                else bar.style.background = "#6366f1"; 
+            }
+            
+            document.getElementById('cash-remaining').innerText = remaining.toLocaleString(); 
+            const usedEl = document.getElementById('cash-used-text'); 
+            if(usedEl) usedEl.innerText = cashUsed.toLocaleString();
+            
+            document.getElementById('budget-text').innerText = currentBudget.toLocaleString();
+            document.getElementById('gross-total').innerText = gross.toLocaleString() + " JPY"; 
+            document.getElementById('refund-total').innerText = refund.toLocaleString() + " JPY"; 
+            document.getElementById('total-spent').innerText = (gross - refund).toLocaleString();
+            
+            myOverallCategoryChart = renderDoughnutChart('overallCategoryChart', myOverallCategoryChart, categoryStats);
+            
+            const overallListContainer = document.getElementById('category-dashboard-list'); 
+            if(overallListContainer) { 
+                overallListContainer.innerHTML = ''; 
+                const sortedCatOverall = Object.keys(categoryStats).map(k => ({label: k, val: categoryStats[k]})).sort((a,b) => b.val - a.val); 
+                
+                const overallTotal = sortedCatOverall.reduce((sum, item) => sum + item.val, 0);
+                
+                sortedCatOverall.forEach(item => { 
+                    const percent = overallTotal > 0 ? ((item.val / overallTotal) * 100).toFixed(1) : 0;
+                    const displayPercent = percent.endsWith('.0') ? percent.slice(0, -2) : percent;
+
+                    const div = document.createElement('div'); 
+                    div.className = "flex justify-between items-center text-xs px-2 py-3 border-b border-slate-50 last:border-0"; 
+                    div.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="w-3.5 h-3.5 rounded-full shadow-sm" style="background-color: ${globalColorsMap[item.label] || '#94a3b8'}"></span>
+                            <div class="flex items-baseline gap-1.5">
+                                <span class="font-bold text-slate-700">${item.label}</span>
+                                <span class="text-[10px] text-slate-400 font-medium">(${displayPercent}%)</span>
+                            </div>
+                        </div>
+                        <span class="font-black text-slate-900">${item.val.toLocaleString()} JPY</span>`; 
+                    overallListContainer.appendChild(div); 
+                }); 
+            }
+            updateDailyCategoryChart();
+        }
+
+        async function getCurrentLocation() { 
+            return new Promise(res => { 
+                if(!navigator.geolocation) return res(""); 
+                navigator.geolocation.getCurrentPosition(
+                    p => res(`https://www.google.com/maps?q=${p.coords.latitude},${p.coords.longitude}`), 
+                    () => res(""), 
+                    { timeout: 5000 } 
+                ); 
+            }); 
+        }
+
+        document.getElementById('expense-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const detailsVal = document.getElementById('details').value; 
+            let amountVal = document.getElementById('amount').value;
+            amountVal = Math.abs(parseFloat(amountVal));
+            
+            if (!detailsVal || !detailsVal.trim()) { 
+                showToast("Please enter a Note!", true); 
+                return; 
+            }
+            if (!amountVal || amountVal <= 0) { 
+                showToast("Please enter a valid amount!", true); 
+                return; 
+            }
+            
+            const btn = document.getElementById('submit-btn'); 
+            btn.disabled = true; 
+            btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Saving...'; 
+            
+            const loc = document.getElementById('save-location').checked ? await getCurrentLocation() : "";
+            
+            const payload = { 
+                date: document.getElementById('date').value, 
+                time: new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Tokyo', hour12: false, hour: '2-digit', minute: '2-digit' }), 
+                payment: document.getElementById('payment').value, 
+                category: document.getElementById('category').value, 
+                details: detailsVal.trim(), 
+                amount: amountVal, 
+                location: loc, 
+                receiptBase64: receiptBase64, 
+                receiptName: receiptName,
+                username: localStorage.getItem('currentUser') || 'ADMIN' 
+            };
+            
+            if(localStorage.getItem('loginTimestamp')) { 
+                localStorage.setItem('loginTimestamp', Date.now().toString()); 
+            }
+            
+            if (currentEditRowId) {
+                payload.oldReceiptUrl = oldReceiptUrl;
+                google.script.run.withSuccessHandler(function(res) { 
+                    if(res === "Success") { 
+                        showToast("Record updated successfully!"); 
+                        cancelEdit();
+                        loadDataFromSheet(); 
+                    } else { 
+                        showToast("Error: " + res, true); 
+                        btn.disabled = false; 
+                        btn.innerHTML = 'Update Record'; 
+                    } 
+                }).withFailureHandler(function() { 
+                    showToast("Connection Error.", true); 
+                    btn.disabled = false; 
+                    btn.innerHTML = 'Update Record'; 
+                }).updateExpense(payload, currentEditRowId);
+            } else {
+                google.script.run.withSuccessHandler(function(res) { 
+                    if(res === "Success") { 
+                        showToast("Record saved successfully!"); 
+                        e.target.reset(); 
+                        document.getElementById('date').value = new Date().toLocaleDateString('en-CA'); 
+                        receiptBase64 = null; 
+                        receiptName = null; 
+                        document.getElementById('receipt-text').innerText = "Receipt"; 
+                        loadDataFromSheet(); 
+                    } else { 
+                        showToast("Error: " + res, true); 
+                    } 
+                    btn.disabled = false; 
+                    btn.innerHTML = 'Save Record'; 
+                }).withFailureHandler(function() { 
+                    showToast("Connection Error.", true); 
+                    btn.disabled = false; 
+                    btn.innerHTML = 'Save Record'; 
+                }).processForm(payload);
+            }
+        });
+
+        function deleteItem(rowId) { 
+            if(confirm('Delete this expense permanently?')) { 
+                showToast("Deleting...");
+                
+                google.script.run.withSuccessHandler(function(res) {
+                    if(res === "Success") {
+                        showToast("Deleted successfully!");
+                        loadDataFromSheet(); 
+                    } else {
+                        showToast("Error: " + res, true);
+                    }
+                }).deleteExpense(rowId);
+            } 
+        }
+
+        function exportToExcel() { 
+            if (expenses.length === 0) { 
+                showToast("No data to export", true); 
+                return; 
+            } 
+            const ws = XLSX.utils.json_to_sheet(expenses);
+            const wb = XLSX.utils.book_new(); 
+            XLSX.utils.book_append_sheet(wb, ws, "Expenses"); 
+            XLSX.writeFile(wb, `TripWallet_${new Date().toISOString().slice(0,10)}.xlsx`); 
+        }
+    </script>
+</body>
+</html>
