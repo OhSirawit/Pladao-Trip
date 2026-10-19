@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#f8fafc">
+    <meta name="theme-color" content="#fdfcf8">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/2060/2060284.png">
     
     <script>
@@ -17,8 +17,8 @@
             "short_name": "Trip Wallet",
             "start_url": window.location.href.split('?')[0],
             "display": "standalone",
-            "background_color": "#f8fafc",
-            "theme_color": "#f8fafc",
+            "background_color": "#fdfcf8",
+            "theme_color": "#fdfcf8",
             "icons": [{"src": "https://cdn-icons-png.flaticon.com/512/2060/2060284.png", "sizes": "512x512", "type": "image/png"}]
         };
         const stringManifest = JSON.stringify(manifestJSON);
@@ -37,89 +37,82 @@
         
         body { 
             font-family: 'Plus Jakarta Sans', 'Kanit', sans-serif; 
-            color: #0f172a; 
+            color: #2d2a26; 
             -webkit-tap-highlight-color: transparent; 
             margin: 0;
             padding: 0;
-            background-color: #f8fafc; 
+            background-color: #fdfcf8; /* Warm Off-white */
             overflow-x: hidden; 
             transition: background-color 0.3s ease;
         }
 
         .modern-card { 
             background: #ffffff; 
-            border: 1px solid rgba(226, 232, 240, 0.6); 
-            border-radius: 28px; 
-            box-shadow: 0 10px 40px -10px rgba(15, 23, 42, 0.05); 
+            border: 1px solid #eaddcf; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04); 
             transition: all 0.3s ease;
         }
         
+        /* New Warm Theme Form Card */
+        .form-card-warm {
+            background-color: #f6f3ed;
+            border: 1px solid #eaddcf;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+
         .input-style { 
-            background: #f1f5f9; 
-            border: 2px solid transparent; 
+            background: #ffffff; 
+            border: 1px solid #e2dcd0; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             appearance: none; 
-            border-radius: 16px; 
-            color: #0f172a;
+            border-radius: 12px; 
+            color: #2d2a26;
         }
         .input-style:focus { 
-            background: #ffffff; 
-            border-color: #6366f1; 
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1); 
+            border-color: #c75b43; 
+            box-shadow: 0 0 0 3px rgba(199, 91, 67, 0.1); 
+            outline: none;
         }
         
         .btn-modern { 
-            background: #0f172a; 
+            background: #2d3748; 
             color: white; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
             border: none;
-            border-radius: 18px;
-            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.2);
+            border-radius: 14px;
+            box-shadow: 0 8px 20px -4px rgba(45, 55, 72, 0.3);
         }
-        .btn-modern:active { transform: scale(0.97) translateY(2px); box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15); }
+        .btn-modern:active { transform: scale(0.98) translateY(2px); box-shadow: 0 4px 10px rgba(45, 55, 72, 0.2); }
         
         .btn-cancel {
-            background: #f1f5f9;
+            background: #ffffff;
             color: #64748b;
-            border-radius: 18px;
+            border: 1px solid #e2dcd0;
+            border-radius: 14px;
             transition: all 0.3s ease;
         }
         .btn-cancel:active { transform: scale(0.97); }
 
-        .nav-btn { transition: all 0.3s ease; color: #94a3b8; }
-        .nav-active { color: #0f172a !important; font-weight: 800; }
-        .nav-active i { transform: translateY(-2px); color: #6366f1; }
-        .nav-active span { color: #0f172a; }
+        .nav-btn { transition: all 0.3s ease; color: #a19d94; }
+        .nav-active { color: #c75b43 !important; font-weight: 800; }
+        .nav-active i { transform: translateY(-2px); }
+        .nav-active span { color: #c75b43; }
         
         .page-content { display: none; }
         .page-active { display: block; animation: smoothFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        @keyframes smoothFade { 
-            from { opacity: 0; transform: translateY(12px) scale(0.99); } 
-            to { opacity: 1; transform: translateY(0) scale(1); } 
-        }
+        @keyframes smoothFade { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
         
         .day-details { display: none; overflow: hidden; }
         .day-details.active { display: block; animation: expandDown 0.25s ease-out forwards;}
-        @keyframes expandDown { 
-            from { opacity: 0; transform: translateY(-8px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
+        @keyframes expandDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
 
         .rotate-icon { transition: transform 0.3s ease; }
         .rotated { transform: rotate(180deg); }
         
-        .menu-dropdown { 
-            opacity: 0; 
-            pointer-events: none; 
-            transform: translateY(-10px) scale(0.95); 
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
-            transform-origin: top right;
-        }
-        .menu-dropdown.active { 
-            opacity: 1; 
-            pointer-events: auto; 
-            transform: translateY(0) scale(1); 
-        }
+        .menu-dropdown { opacity: 0; pointer-events: none; transform: translateY(-10px) scale(0.95); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); transform-origin: top right;}
+        .menu-dropdown.active { opacity: 1; pointer-events: auto; transform: translateY(0) scale(1); }
         
         #toast-notification { transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
         
@@ -137,47 +130,45 @@
             animation-name: placeholderShimmer;
             animation-timing-function: linear;
         }
-        @keyframes placeholderShimmer { 
-            0% { background-position: -468px 0; } 
-            100% { background-position: 468px 0; } 
-        }
+        @keyframes placeholderShimmer { 0% { background-position: -468px 0; } 100% { background-position: 468px 0; } }
 
-        /* ---------------- Tax Refund Color ---------------- */
+        /* ---------------- Tax Refund Color (LightGoldenrod1) ---------------- */
         .tax-refund-card { background-color: #FFEC8B !important; border-color: #e5d47e !important; }
 
         /* ---------------- Dark Mode Styles ---------------- */
         body.dark-mode { background-color: #0f172a; color: #f1f5f9; }
-        body.dark-mode .modern-card { background-color: #1e293b; border-color: #334155; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); }
+        body.dark-mode .modern-card, body.dark-mode .form-card-warm { background-color: #1e293b; border-color: #334155; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); }
         body.dark-mode .input-style { background-color: #0f172a; color: #f1f5f9; border-color: #334155; }
-        body.dark-mode .input-style:focus { border-color: #818cf8; background-color: #1e293b; }
+        body.dark-mode .input-style:focus { border-color: #c75b43; background-color: #1e293b; }
         body.dark-mode nav { background-color: rgba(30, 41, 59, 0.8) !important; border-bottom-color: #334155; }
         body.dark-mode .bg-white { background-color: #1e293b !important; }
         body.dark-mode .bg-slate-50, body.dark-mode .bg-slate-100 { background-color: #0f172a !important; }
-        body.dark-mode .text-slate-900, body.dark-mode .text-slate-800 { color: #f8fafc !important; }
+        body.dark-mode .text-slate-900, body.dark-mode .text-slate-800, body.dark-mode .text-gray-800 { color: #f8fafc !important; }
         body.dark-mode .text-slate-700 { color: #cbd5e1 !important; }
         body.dark-mode .text-slate-600, body.dark-mode .text-slate-500 { color: #94a3b8 !important; }
-        body.dark-mode .border-slate-100, body.dark-mode .border-slate-200 { border-color: #334155 !important; }
-        body.dark-mode .btn-modern { background-color: #6366f1; }
-        body.dark-mode .btn-cancel { background-color: #334155; color: #cbd5e1; }
+        body.dark-mode .border-[#e2dcd0], body.dark-mode .border-[#eaddcf], body.dark-mode .border-[#e5e0d8] { border-color: #334155 !important; }
+        body.dark-mode .btn-cancel { background-color: #334155; color: #cbd5e1; border-color:#475569;}
         body.dark-mode .fixed.bottom-6 { background-color: rgba(30, 41, 59, 0.9); border-color: #334155; }
         body.dark-mode .nav-active span { color: #f1f5f9; }
-        body.dark-mode #quick-tags-container button { background-color: #334155; border-color: #475569; color: #a5b4fc; }
-        body.dark-mode #quick-tags-container button:hover { background-color: #6366f1; color: white; }
-        body.dark-mode .tax-refund-card { background-color: #3f3a1b !important; border-color: #6b622c !important; }
+        body.dark-mode #quick-tags-container button { background-color: #334155; border-color: #475569; color: #e2e8f0; }
+        body.dark-mode #quick-tags-container button:hover { background-color: #c75b43; color: white; }
+        body.dark-mode .tax-refund-card { background-color: #5c5531 !important; border-color: #8c824c !important; }
+        body.dark-mode .bg-\[\#f0ebe1\] { background-color: #334155 !important; }
+        body.dark-mode .bg-\[\#fffaf9\] { background-color: #1e293b !important; }
     </style>
 </head>
 <body class="pb-32 relative">
 
     <!-- Toast Notification -->
     <div id="toast-notification" class="fixed top-8 left-1/2 transform -translate-x-1/2 z-[100] -translate-y-32 opacity-0 pointer-events-none w-auto whitespace-nowrap">
-        <div id="toast-bg" class="bg-slate-900/95 backdrop-blur-md text-white px-5 py-3.5 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex items-center gap-3">
-            <i id="toast-icon" class="fas fa-check-circle text-indigo-400 text-lg"></i>
+        <div id="toast-bg" class="bg-[#2d3748]/95 backdrop-blur-md text-white px-5 py-3.5 rounded-full shadow-[0_10px_40px_rgba(0,0,0,0.2)] flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-emerald-400 text-lg"></i>
             <span id="toast-message" class="font-bold text-sm tracking-wide">Success!</span>
         </div>
     </div>
 
     <!-- Logout Modal -->
-    <div id="logout-modal" class="fixed inset-0 z-[300] bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center px-6 transition-opacity duration-300 opacity-0">
+    <div id="logout-modal" class="fixed inset-0 z-[300] bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center px-6 transition-opacity duration-300 opacity-0">
         <div class="modern-card p-8 w-full max-w-sm text-center transform scale-95 transition-transform duration-300" id="logout-modal-content">
             <div class="w-16 h-16 bg-slate-100 text-slate-800 rounded-full mx-auto flex items-center justify-center text-2xl mb-5 shadow-sm">
                 <i class="fas fa-sign-out-alt"></i>
@@ -186,51 +177,51 @@
             <p class="text-sm font-medium text-slate-500 mb-8">Are you sure you want to log out of your wallet?</p>
             <div class="flex gap-3">
                 <button onclick="closeLogoutModal()" class="flex-1 py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors">Cancel</button>
-                <button onclick="confirmLogout()" class="flex-1 py-3.5 rounded-2xl bg-rose-500 text-white font-bold text-sm hover:bg-rose-600 transition-colors shadow-lg shadow-rose-500/20">Sign Out</button>
+                <button onclick="confirmLogout()" class="flex-1 py-3.5 rounded-2xl bg-[#c75b43] text-white font-bold text-sm hover:bg-[#b04d37] transition-colors shadow-lg shadow-[#c75b43]/20">Sign Out</button>
             </div>
         </div>
     </div>
 
     <!-- Budget Modal -->
-    <div id="budget-modal" class="fixed inset-0 z-[300] bg-slate-900/30 backdrop-blur-sm hidden flex items-center justify-center px-6 transition-opacity duration-300 opacity-0">
+    <div id="budget-modal" class="fixed inset-0 z-[300] bg-slate-900/40 backdrop-blur-sm hidden flex items-center justify-center px-6 transition-opacity duration-300 opacity-0">
         <div class="modern-card p-8 w-full max-w-sm text-center transform scale-95 transition-transform duration-300" id="budget-modal-content">
-            <div class="w-16 h-16 bg-indigo-50 text-indigo-500 rounded-full mx-auto flex items-center justify-center text-2xl mb-5 shadow-sm">
+            <div class="w-16 h-16 bg-[#f6f3ed] text-[#c75b43] rounded-full mx-auto flex items-center justify-center text-2xl mb-5 shadow-sm">
                 <i class="fas fa-wallet"></i>
             </div>
             <h3 class="text-xl font-black text-slate-900 mb-1 tracking-tight">Set Budget</h3>
             <p class="text-xs font-medium text-slate-500 mb-6">Enter your total trip budget (JPY)</p>
 
             <div class="relative mb-6">
-                <input type="number" id="new-budget-input" class="w-full input-style p-4 text-2xl font-black text-center text-slate-800 outline-none" placeholder="0">
+                <input type="number" id="new-budget-input" class="w-full input-style bg-white p-4 text-2xl font-black text-center text-slate-800 outline-none border border-[#e2dcd0]" placeholder="0">
                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">JPY</span>
             </div>
 
             <div class="flex gap-3">
-                <button onclick="closeBudgetModal()" class="flex-1 py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors">Cancel</button>
-                <button onclick="saveBudget()" class="flex-1 py-3.5 rounded-2xl bg-indigo-500 text-white font-bold text-sm hover:bg-indigo-600 transition-colors shadow-lg shadow-indigo-500/20">Save</button>
+                <button onclick="closeBudgetModal()" class="flex-1 py-3.5 rounded-2xl bg-slate-100 text-slate-700 font-bold text-sm hover:bg-slate-200 transition-colors border border-[#e2dcd0]">Cancel</button>
+                <button onclick="saveBudget()" class="flex-1 py-3.5 rounded-2xl bg-[#2d3748] text-white font-bold text-sm hover:bg-[#1a202c] transition-colors shadow-lg shadow-[#2d3748]/20">Save</button>
             </div>
         </div>
     </div>
 
     <!-- Login Page -->
-    <div id="login-page" class="fixed inset-0 z-[200] bg-slate-50 flex items-center justify-center px-6 transition-opacity duration-500">
-        <div class="modern-card p-8 w-full max-w-sm text-center border-none shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]">
-            <div class="w-20 h-20 bg-slate-900 rounded-[24px] mx-auto flex items-center justify-center text-white text-3xl mb-6 shadow-xl shadow-slate-900/20 transform -rotate-3">
+    <div id="login-page" class="fixed inset-0 z-[200] bg-[#fdfcf8] flex items-center justify-center px-6 transition-opacity duration-500">
+        <div class="modern-card p-8 w-full max-w-sm text-center border-none shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)] bg-white">
+            <div class="w-20 h-20 bg-[#2d3748] rounded-[24px] mx-auto flex items-center justify-center text-white text-3xl mb-6 shadow-xl shadow-[#2d3748]/20 transform -rotate-3">
                 <i class="fas fa-plane-departure"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">PLADAO TRIP</h2>
-            <p class="text-indigo-500 text-[10px] font-black uppercase tracking-widest mb-8">Trip Wallet</p>
+            <p class="text-[#c75b43] text-[10px] font-black uppercase tracking-widest mb-8">Trip Wallet</p>
             <form onsubmit="handleLogin(event)" class="space-y-4">
-                <input type="text" id="username-input" placeholder="Username" class="w-full input-style p-4 text-center text-lg font-bold outline-none lowercase" required autocapitalize="none">
+                <input type="text" id="username-input" placeholder="Username" class="w-full input-style p-4 text-center text-lg font-bold outline-none lowercase border border-[#e2dcd0]" required autocapitalize="none">
                 
                 <div class="relative w-full">
-                    <input type="password" id="pin-input" pattern="[0-9]*" inputmode="numeric" placeholder="PIN Code" class="w-full input-style p-4 text-center text-2xl font-black tracking-[0.2em] outline-none pr-12" required>
-                    <button type="button" onclick="togglePinVisibility()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-indigo-500 transition-colors focus:outline-none p-2">
+                    <input type="password" id="pin-input" pattern="[0-9]*" inputmode="numeric" placeholder="PIN Code" class="w-full input-style p-4 text-center text-2xl font-black tracking-[0.2em] outline-none pr-12 border border-[#e2dcd0]" required>
+                    <button type="button" onclick="togglePinVisibility()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-[#c75b43] transition-colors focus:outline-none p-2">
                         <i id="pin-eye-icon" class="fas fa-eye"></i>
                     </button>
                 </div>
 
-                <button type="submit" id="login-btn" class="w-full btn-modern py-4 text-sm flex justify-center items-center gap-2 mt-2">
+                <button type="submit" id="login-btn" class="w-full btn-modern py-4 text-sm flex justify-center items-center gap-2 mt-2 bg-[#2d3748]">
                     Unlock Wallet <i class="fas fa-arrow-right text-xs"></i>
                 </button>
             </form>
@@ -240,25 +231,24 @@
     <!-- Main App Content -->
     <div id="main-app" class="hidden">
         
-        <!-- Navigation Bar -->
-        <nav class="sticky top-0 z-50 px-6 py-4 bg-white/70 backdrop-blur-xl border-b border-slate-100/50 flex justify-between items-center relative">
+        <!-- Navigation Bar (Adapted to Warm Theme) -->
+        <nav class="sticky top-0 z-50 px-6 py-4 bg-[#fdfcf8]/90 backdrop-blur-xl border-b border-[#eaddcf] flex justify-between items-center relative">
             <div class="flex items-center gap-3 relative z-10">
-                <div class="w-10 h-10 bg-slate-900 rounded-[14px] flex items-center justify-center text-white shadow-md shadow-slate-900/10">
+                <div class="w-10 h-10 bg-[#c75b43] rounded-[12px] flex items-center justify-center text-white shadow-md shadow-[#c75b43]/20">
                     <i class="fas fa-plane text-sm"></i>
                 </div>
-                <span class="font-black text-slate-900 text-sm hidden sm:block tracking-tight">Trip Wallet</span>
+                <div>
+                    <span class="font-bold text-gray-800 text-[13px] block leading-tight">PLADAO TRIP</span>
+                    <span class="text-[9px] font-medium text-gray-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Synced</span>
+                </div>
             </div>
             
-            <div class="absolute left-1/2 transform -translate-x-1/2 text-[11px] font-black tracking-widest z-0 flex items-center gap-1.5 bg-slate-100/80 px-3 py-1.5 rounded-full text-slate-700">
-                <i class="fas fa-location-dot text-indigo-500"></i> TOKYO
-            </div>
-
             <div class="flex items-center gap-2.5 relative z-10">
-                <button onclick="toggleDarkMode()" class="text-slate-400 hover:text-indigo-500 transition-colors w-10 h-10 flex items-center justify-center rounded-[14px] bg-white shadow-sm border border-slate-100 focus:outline-none">
+                <button onclick="toggleDarkMode()" class="text-slate-500 hover:text-[#c75b43] transition-colors w-10 h-10 flex items-center justify-center rounded-[12px] bg-white shadow-sm border border-[#eaddcf] focus:outline-none">
                     <i id="theme-icon" class="fas fa-moon"></i>
                 </button>
-                <span id="display-username" class="text-[10px] font-bold text-slate-600 bg-white shadow-sm px-2.5 py-1.5 rounded-xl border border-slate-100"></span>
-                <button id="menu-btn" onclick="toggleMenu(event)" class="text-slate-500 hover:text-slate-900 transition-colors focus:outline-none w-10 h-10 flex items-center justify-center rounded-[14px] bg-white shadow-sm border border-slate-100">
+                <span id="display-username" class="text-[10px] font-bold text-slate-600 bg-white shadow-sm px-3 py-2 rounded-[10px] border border-[#eaddcf]"></span>
+                <button id="menu-btn" onclick="toggleMenu(event)" class="text-slate-500 hover:text-[#c75b43] transition-colors focus:outline-none w-10 h-10 flex items-center justify-center rounded-[12px] bg-white shadow-sm border border-[#eaddcf]">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -268,7 +258,7 @@
                 <ul class="flex flex-col space-y-1">
                     <li>
                         <button onclick="switchPage('dashboard');" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3">
-                            <i class="fas fa-chart-pie w-4 text-indigo-500"></i> Analytics
+                            <i class="fas fa-chart-pie w-4 text-[#c75b43]"></i> Analytics
                         </button>
                     </li>
                     <div class="border-t border-slate-100 my-1"></div>
@@ -289,167 +279,187 @@
                             <div>
                                 <p class="text-[10px] font-black text-slate-400 uppercase mb-2 flex items-center gap-1.5"><i class="fas fa-plane-departure text-slate-300"></i> BKK <i class="fas fa-arrow-right text-[8px]"></i> NRT</p>
                                 <div class="space-y-3">
-                                    <a href="https://drive.google.com/file/d/1B_fLG5nHxuYCMYFWpXHwWHtP42QBGHI0/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Duangkamon</a>
-                                    <a href="https://drive.google.com/file/d/1piK-w0epxvxrKfOHA46WubSP6G8JRTwP/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Chayada</a>
-                                    <a href="https://drive.google.com/file/d/1fmnmdX93P6U7XkKSm83cvo0iDMhmyre3/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Thalerngsak</a>
-                                    <a href="https://drive.google.com/file/d/1Ek96HHGnaL1cEIm1HdRBnXpPCks4qao3/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Paran</a>
-                                    <a href="https://drive.google.com/file/d/12nkElJiNFviM7uiEIAliyjg0NbzyUC5G/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Sirawit</a>
-                                    <a href="https://drive.google.com/file/d/1-TdABp9WSjQ9dU2WlR0xtNiecu37ZyXT/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Thidaporn</a>
+                                    <a href="https://drive.google.com/file/d/1B_fLG5nHxuYCMYFWpXHwWHtP42QBGHI0/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Duangkamon</a>
+                                    <a href="https://drive.google.com/file/d/1piK-w0epxvxrKfOHA46WubSP6G8JRTwP/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Chayada</a>
+                                    <a href="https://drive.google.com/file/d/1fmnmdX93P6U7XkKSm83cvo0iDMhmyre3/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Thalerngsak</a>
+                                    <a href="https://drive.google.com/file/d/1Ek96HHGnaL1cEIm1HdRBnXpPCks4qao3/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Paran</a>
+                                    <a href="https://drive.google.com/file/d/12nkElJiNFviM7uiEIAliyjg0NbzyUC5G/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Sirawit</a>
+                                    <a href="https://drive.google.com/file/d/1-TdABp9WSjQ9dU2WlR0xtNiecu37ZyXT/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Thidaporn</a>
                                 </div>
                             </div>
                             <div class="pt-3 border-t border-slate-200/60">
                                 <p class="text-[10px] font-black text-slate-400 uppercase mb-2 flex items-center gap-1.5"><i class="fas fa-plane-arrival text-slate-300"></i> NRT <i class="fas fa-arrow-right text-[8px]"></i> BKK</p>
-                                <div class="space-y-3"><a href="https://drive.google.com/file/d/19nPpN0u30VGh5p2ADhi1q_QG1NhmxuKS/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-indigo-600">Group Ticket (Everyone)</a></div>
+                                <div class="space-y-3"><a href="https://drive.google.com/file/d/19nPpN0u30VGh5p2ADhi1q_QG1NhmxuKS/view?usp=sharing" target="_blank" class="block text-xs font-bold text-slate-600 hover:text-[#c75b43]">Group Ticket (Everyone)</a></div>
                             </div>
                         </div>
                     </li>
                     <div class="border-t border-slate-100 my-1"></div>
                     <li><button onclick="exportToExcel(); toggleMenu();" class="w-full text-left px-4 py-3 text-sm font-bold text-slate-700 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-file-export w-4 text-emerald-500"></i> Export Data</button></li>
                     <div class="border-t border-slate-100 my-1"></div>
-                    <li><button onclick="logout()" class="w-full text-left px-4 py-3 text-sm font-bold text-rose-600 hover:bg-slate-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-sign-out-alt w-4 text-rose-500"></i> Sign Out</button></li>
+                    <li><button onclick="logout()" class="w-full text-left px-4 py-3 text-sm font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition-colors flex items-center gap-3"><i class="fas fa-sign-out-alt w-4 text-rose-500"></i> Sign Out</button></li>
                 </ul>
             </div>
         </nav>
 
         <!-- PAGE 1: HOME (Add Expense) -->
-        <div id="page-home" class="page-content page-active max-w-xl mx-auto px-5 py-5 space-y-6">
+        <div id="page-home" class="page-content page-active max-w-xl mx-auto px-4 py-5 space-y-5">
             
-            <!-- Dashboard Widget -->
-            <div class="modern-card p-7 bg-slate-900 text-white border-none shadow-2xl shadow-slate-900/20 relative overflow-hidden">
-                <div class="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-sky-500/10 rounded-full blur-2xl pointer-events-none"></div>
+            <!-- Dashboard Widget (Dark Slate) -->
+            <div class="modern-card p-6 bg-[#2d3748] text-white border-none shadow-[0_8px_30px_rgba(45,55,72,0.2)] relative overflow-hidden rounded-[20px]">
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#4a5568]/30 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-[#c75b43]/20 rounded-full blur-2xl pointer-events-none"></div>
                 
                 <div class="relative z-10">
-                    <div class="flex justify-between items-center mb-2">
-                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-400">Available Balance</p>
+                    <div class="flex justify-between items-center mb-1">
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-300">Available Balance</p>
                         <div class="text-right">
-                            <span id="last-updated-text" class="text-[11px] font-bold text-slate-400">Last Updated : --:--:--</span>
+                            <span id="last-updated-text" class="text-[10px] font-bold text-slate-400">Last Updated : --:--:--</span>
                         </div>
                     </div>
                     
-                    <div class="flex items-baseline gap-2 mb-6 mt-1">
-                        <h3 id="cash-remaining" class="font-black text-white tracking-tight text-[44px] leading-none">0</h3>
-                        <span class="text-sm font-bold text-slate-400">JPY</span>
+                    <div class="flex items-baseline gap-2 mb-5 mt-1">
+                        <h3 id="cash-remaining" class="font-black text-white tracking-tight text-[40px] leading-none">0</h3>
+                        <span class="text-sm font-bold text-slate-300">JPY</span>
                     </div>
                     
-                    <div class="w-full bg-slate-800 rounded-full h-2.5 mb-3.5 overflow-hidden border border-slate-700/50">
-                        <div id="budget-progress-bar" class="h-full rounded-full transition-all duration-1000 ease-out bg-indigo-500 relative" style="width: 100%">
+                    <div class="w-full bg-[#1a202c] rounded-full h-2 mb-3 overflow-hidden">
+                        <div id="budget-progress-bar" class="h-full rounded-full transition-all duration-1000 ease-out bg-[#c75b43] relative" style="width: 100%">
                             <div class="absolute top-0 left-0 w-full h-full bg-white/20 transform -skew-x-12 animate-[placeholderShimmer_2s_infinite]"></div>
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-center text-[11px] font-bold border-t border-slate-800 pt-3">
-                        <span class="text-slate-400">Spent: <span id="cash-used-text" class="text-white">0</span></span>
-                        <span class="text-slate-400 flex items-center gap-1">
+                    <div class="flex justify-between items-center text-[11px] font-bold border-t border-[#4a5568] pt-3">
+                        <span class="text-slate-300">Spent: <span id="cash-used-text" class="text-white">0</span></span>
+                        <span class="text-slate-300 flex items-center gap-1">
                             Budget: 
-                            <span class="text-white cursor-pointer hover:text-indigo-300 transition-colors flex items-center gap-1" onclick="openBudgetModal()">
+                            <span class="text-white cursor-pointer hover:text-[#eaddcf] transition-colors flex items-center gap-1" onclick="openBudgetModal()">
                                 <span id="budget-text">150,000</span> 
-                                <i class="fas fa-pencil-alt text-[9px] text-slate-500 bg-slate-800 p-1.5 rounded-full border border-slate-700"></i>
+                                <i class="fas fa-pencil-alt text-[9px] text-slate-400 bg-[#1a202c] p-1.5 rounded-full"></i>
                             </span>
                         </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Expense Form -->
-            <section class="modern-card p-7">
-                <div class="flex justify-between items-center mb-5">
-                    <h3 id="form-title" class="text-sm font-black text-slate-900 flex items-center gap-2 tracking-tight">
-                        <i class="fas fa-plus-circle text-indigo-500"></i> Add Expense
-                    </h3>
-                </div>
-                
-                <form id="expense-form" class="space-y-4">
-                    <div class="space-y-1.5">
-                        <div class="flex justify-between items-center px-1">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Amount (Calc) <span class="text-rose-500">*</span></label>
-                            <span id="thb-equivalent" class="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-md hidden transition-all"></span>
+            <!-- Warm Theme Expense Form -->
+            <section class="form-card-warm relative shadow-sm">
+                <!-- Form Header -->
+                <div class="flex justify-between items-start mb-6">
+                    <div class="flex gap-3 items-center">
+                        <div class="w-10 h-10 rounded-[12px] bg-[#2d3748] text-white flex items-center justify-center shadow-md">
+                            <i class="fas fa-pen-nib"></i>
                         </div>
-                        <div class="relative">
-                            <input type="text" inputmode="decimal" id="amount" placeholder="e.g. 1500+250" class="w-full input-style p-5 text-3xl font-black outline-none text-center" required oninput="calculateTHB()">
-                            <span class="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-sm">JPY</span>
+                        <div>
+                            <h3 id="form-title" class="text-[15px] font-bold text-gray-800 tracking-tight">Add New Expense</h3>
+                            <p class="text-[10px] text-gray-500">กรุณากรอกข้อมูลให้ครบถ้วน</p>
                         </div>
                     </div>
-
-                    <div class="grid grid-cols-2 gap-3 mt-2">
+                    <div class="bg-rose-100 text-rose-600 text-[10px] font-bold px-2 py-1 rounded border border-rose-200 shadow-sm mt-1">
+                        * จำเป็น
+                    </div>
+                </div>
+                
+                <form id="expense-form" class="space-y-5">
+                    <!-- Row 1: Date & Category -->
+                    <div class="grid grid-cols-2 gap-3">
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Date</label>
+                            <label class="text-[11px] font-bold text-gray-700 flex items-center gap-1.5"><i class="far fa-calendar-alt text-[#c75b43]"></i> Date <span class="text-[#c75b43]">*</span></label>
                             <input type="date" id="date" class="w-full input-style p-3.5 text-[13px] font-bold outline-none" required>
                         </div>
                         <div class="space-y-1.5">
-                            <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Payment</label>
-                            <select id="payment" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer">
-                                <option value="Cash">💵 Cash</option>
-                                <option value="Credit Card">💳 Credit Card</option>
-                                <option value="Travel Card">🌍 Travel Card</option>
-                                <option value="IC Card">🚉 IC Card</option>
-                                <option value="QR Code">📲 QR Code</option>
+                            <label class="text-[11px] font-bold text-gray-700 flex items-center gap-1.5"><i class="fas fa-tags text-[#c75b43]"></i> Category <span class="text-[#c75b43]">*</span></label>
+                            <select id="category" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer" required onchange="renderQuickTags()">
+                                <optgroup label="EXPENSES">
+                                    <option value="Food">🍱 Food & Dining</option>
+                                    <option value="Transportation">🚆 Transport</option>
+                                    <option value="Dessert/Beverage">☕ Beverage / Dessert</option>
+                                    <option value="Shopping">🛍️ Shopping</option>
+                                    <option value="Admission Fee">🎟️ Admission</option>
+                                    <option value="Tops up IC Card">🔋 Top up IC Card</option>
+                                    <option value="Pre-Order">📦 Pre-Order</option>
+                                    <option value="Gasoline">⛽ Gasoline</option>
+                                    <option value="Toll / ETC">🛣️ Toll / ETC</option>
+                                    <option value="Other">✨ Others</option>
+                                </optgroup>
+                                <optgroup label="REFUND / ADVANCE">
+                                    <option value="Tax refund">💰 Tax Refund</option>
+                                    <option value="Advanced">⏳ Advanced</option>
+                                    <option value="Adjustment">⚙️ Adjustment</option>
+                                    <option value="Refund Pre-Order">↩️ Refund Pre-Order</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Category</label>
-                        <select id="category" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer" required onchange="renderQuickTags()">
-                            <optgroup label="EXPENSES">
-                                <option value="Food">🍱 Food & Dining</option>
-                                <option value="Transportation">🚆 Transport</option>
-                                <option value="Dessert/Beverage">☕ Beverage / Dessert</option>
-                                <option value="Shopping">🛍️ Shopping</option>
-                                <option value="Admission Fee">🎟️ Admission</option>
-                                <option value="Tops up IC Card">🔋 Top up IC Card</option>
-                                <option value="Pre-Order">📦 Pre-Order</option>
-                                <option value="Gasoline">⛽ Gasoline</option>
-                                <option value="Toll / ETC">🛣️ Toll / ETC</option>
-                                <option value="Other">✨ Others</option>
-                            </optgroup>
-                            <optgroup label="REFUND / ADVANCE">
-                                <option value="Tax refund">💰 Tax Refund</option>
-                                <option value="Advanced">⏳ Advanced</option>
-                                <option value="Adjustment">⚙️ Adjustment</option>
-                                <option value="Refund Pre-Order">↩️ Refund Pre-Order</option>
-                            </optgroup>
-                        </select>
+
+                    <!-- Inner Card for Amount & Payment -->
+                    <div class="bg-white border border-[#e5e0d8] rounded-[16px] p-4 shadow-sm relative">
+                        <div class="flex justify-between items-center mb-4 pb-2 border-b border-[#f0ebe1]">
+                            <div class="text-[11px] font-bold text-[#c75b43] flex items-center gap-1.5"><i class="fas fa-coins"></i> Amount Details</div>
+                            <div class="text-[9px] text-gray-400 font-bold uppercase">Currency: JPY</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1.5 col-span-2 sm:col-span-1">
+                                <div class="flex justify-between items-center">
+                                    <label class="text-[11px] font-bold text-gray-700">Amount (Calc) <span class="text-[#c75b43]">*</span></label>
+                                    <span id="thb-equivalent" class="text-[9px] font-bold text-white bg-indigo-400 px-2 py-0.5 rounded shadow-sm hidden transition-all"></span>
+                                </div>
+                                <input type="text" inputmode="decimal" id="amount" placeholder="e.g. 1500+250" class="w-full input-style p-3.5 text-2xl font-black outline-none focus:border-[#c75b43] text-gray-800" required oninput="calculateTHB()">
+                            </div>
+                            <div class="space-y-1.5 col-span-2 sm:col-span-1">
+                                <label class="text-[11px] font-bold text-gray-700">Payment Method</label>
+                                <select id="payment" class="w-full input-style p-3.5 text-[13px] font-bold outline-none cursor-pointer">
+                                    <option value="Cash">💵 Cash</option>
+                                    <option value="Credit Card">💳 Credit Card</option>
+                                    <option value="Travel Card">🌍 Travel Card</option>
+                                    <option value="IC Card">🚉 IC Card</option>
+                                    <option value="QR Code">📲 QR Code</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     
+                    <!-- Note Field -->
                     <div class="space-y-1.5">
-                        <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Note <span class="text-rose-500">*</span></label>
-                        <input type="text" id="details" placeholder="What did you buy?" class="w-full input-style p-4 text-[13px] font-bold outline-none" required>
-                        <!-- Container สำหรับ Quick Tags -->
+                        <label class="text-[11px] font-bold text-gray-700 flex items-center gap-1.5"><i class="fas fa-edit text-[#c75b43]"></i> Note / Details <span class="text-[#c75b43]">*</span></label>
+                        <textarea id="details" rows="2" placeholder="What did you buy?" class="w-full input-style p-4 text-[13px] font-medium outline-none resize-none" required></textarea>
+                        <!-- Quick Tags -->
                         <div id="quick-tags-container" class="flex flex-wrap gap-1.5 mt-2 px-1"></div>
                     </div>
                     
-                    <div class="grid grid-cols-4 gap-2 pt-2">
-                        <!-- ปุ่มเลือกรูปใบเสร็จ -->
-                        <div class="relative col-span-2">
+                    <!-- Options Grid (2x2) -->
+                    <div class="grid grid-cols-2 gap-3 pt-1">
+                        <!-- Receipt -->
+                        <div class="relative">
                             <input type="file" id="receipt-file" accept="image/*" capture="environment" class="hidden">
-                            <label for="receipt-file" id="receipt-label" class="flex items-center justify-center gap-2 h-full py-3.5 border-2 border-dashed border-indigo-200 rounded-[16px] cursor-pointer bg-indigo-50/50 hover:bg-indigo-50 transition-colors">
-                                <i class="fas fa-camera text-indigo-500 text-sm"></i>
-                                <span class="text-[10px] text-indigo-700 font-bold truncate max-w-[80px]" id="receipt-text">Receipt</span>
+                            <label for="receipt-file" id="receipt-label" class="flex items-center justify-center gap-2 w-full py-3.5 border-2 border-dashed border-[#e2dcd0] hover:border-[#c75b43] bg-[#fffaf9] rounded-[14px] cursor-pointer transition-colors">
+                                <i class="fas fa-camera text-[#c75b43] text-sm"></i>
+                                <span class="text-[11px] text-[#c75b43] font-bold truncate max-w-[80px]" id="receipt-text">แนบใบเสร็จ</span>
                             </label>
                         </div>
-                        <!-- ปุ่มเปิด/ปิด GPS -->
-                        <div class="col-span-2 flex items-center justify-center gap-2 h-full py-3.5 bg-slate-50 rounded-[16px] border border-slate-100">
-                            <input type="checkbox" id="save-location" checked class="w-4 h-4 accent-slate-900 rounded cursor-pointer">
-                            <label for="save-location" class="text-[10px] font-black text-slate-600 uppercase cursor-pointer">Save GPS</label>
+                        <!-- GPS -->
+                        <div class="flex items-center justify-center gap-2 w-full py-3.5 bg-white border border-[#e2dcd0] rounded-[14px]">
+                            <input type="checkbox" id="save-location" checked class="w-4 h-4 accent-[#8c8577] rounded cursor-pointer">
+                            <label for="save-location" class="text-[11px] font-bold text-gray-600 uppercase cursor-pointer">SAVE GPS</label>
                         </div>
-                        <!-- สวิตช์ Shared Expense -->
-                        <div class="col-span-2 flex items-center justify-center gap-2 h-full py-3 bg-slate-50 rounded-[16px] border border-slate-100 cursor-pointer" onclick="toggleCheckbox('is-shared', 'icon-shared')">
+                        <!-- Shared -->
+                        <div class="flex items-center justify-center gap-2 w-full py-3 bg-white border border-[#e2dcd0] rounded-[14px] cursor-pointer transition-colors hover:bg-gray-50" onclick="toggleCheckbox('is-shared', 'icon-shared', 'text-[#c75b43]')">
                             <input type="checkbox" id="is-shared" class="hidden">
-                            <i id="icon-shared" class="fas fa-users text-slate-300 text-sm transition-colors"></i>
-                            <span class="text-[10px] font-black text-slate-600 uppercase">Shared</span>
+                            <i id="icon-shared" class="fas fa-users text-gray-300 text-sm transition-colors"></i>
+                            <span class="text-[11px] font-bold text-gray-600 uppercase">SHARED</span>
                         </div>
-                        <!-- สวิตช์ Tax Refund -->
-                        <div class="col-span-2 flex items-center justify-center gap-2 h-full py-3 bg-slate-50 rounded-[16px] border border-slate-100 cursor-pointer" onclick="toggleCheckbox('is-taxfree', 'icon-taxfree', 'text-amber-500')">
+                        <!-- Tax Refund -->
+                        <div class="flex items-center justify-center gap-2 w-full py-3 bg-white border border-[#e2dcd0] rounded-[14px] cursor-pointer transition-colors hover:bg-gray-50" onclick="toggleCheckbox('is-taxfree', 'icon-taxfree', 'text-[#c75b43]')">
                             <input type="checkbox" id="is-taxfree" class="hidden">
-                            <i id="icon-taxfree" class="fas fa-tag text-slate-300 text-sm transition-colors"></i>
-                            <span class="text-[10px] font-black text-slate-600 uppercase">Tax-Refund</span>
+                            <i id="icon-taxfree" class="fas fa-tag text-gray-300 text-sm transition-colors"></i>
+                            <span class="text-[11px] font-bold text-gray-600 uppercase">TAX-REFUND</span>
                         </div>
                     </div>
 
-                    <div class="flex gap-3 mt-5">
-                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden w-1/3 btn-cancel py-4 text-sm font-bold flex justify-center items-center">Cancel</button>
-                        <button type="submit" id="submit-btn" class="flex-1 btn-modern py-4 text-sm font-bold flex justify-center items-center gap-2">Save Record</button>
+                    <!-- Submit Buttons -->
+                    <div class="flex gap-3 mt-5 pt-2">
+                        <button type="button" id="cancel-edit-btn" onclick="cancelEdit()" class="hidden w-1/3 btn-cancel py-4 text-sm font-bold flex justify-center items-center">ยกเลิก</button>
+                        <button type="submit" id="submit-btn" class="flex-1 btn-modern bg-[#2d3748] hover:bg-[#1a202c] py-4 text-sm font-bold flex justify-center items-center gap-2">บันทึกข้อมูลเข้าสู่ระบบ <i class="fas fa-paper-plane"></i></button>
                     </div>
                 </form>
             </section>
@@ -525,7 +535,7 @@
         <div id="page-dashboard" class="page-content max-w-xl mx-auto px-5 py-4 space-y-5">
             <div class="flex justify-between items-center mb-4 px-1">
                 <h2 class="text-2xl font-black text-slate-900 tracking-tight">Analytics</h2>
-                <button onclick="switchPage('home')" class="text-slate-400 hover:text-indigo-500 transition-colors w-9 h-9 rounded-full bg-white border border-slate-200 flex items-center justify-center shadow-sm">
+                <button onclick="switchPage('home')" class="text-slate-400 hover:text-[#c75b43] transition-colors w-9 h-9 rounded-full bg-white border border-[#eaddcf] flex items-center justify-center shadow-sm">
                     <i class="fas fa-times text-sm"></i>
                 </button>
             </div>
@@ -558,7 +568,7 @@
         </div>
 
         <!-- Bottom Navigation Bar -->
-        <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[360px] bg-white/80 backdrop-blur-xl border border-white shadow-[0_10px_40px_rgba(15,23,42,0.08)] rounded-[24px] p-1.5 flex justify-between items-center">
+        <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-[360px] bg-white/90 backdrop-blur-xl border border-white shadow-[0_10px_40px_rgba(15,23,42,0.08)] rounded-[24px] p-1.5 flex justify-between items-center">
             <button onclick="switchPage('home')" id="nav-home" class="nav-btn w-1/3 py-3 rounded-[20px] flex flex-col items-center gap-1 nav-active hover:bg-slate-50 transition-colors">
                 <i class="fas fa-plus text-[18px]"></i>
                 <span class="text-[9px] font-bold uppercase tracking-wider">Add</span>
@@ -632,7 +642,8 @@
                 tags.forEach(tag => {
                     const btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = 'text-[10px] font-bold bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md border border-indigo-100 hover:bg-indigo-500 hover:text-white transition-colors whitespace-nowrap shadow-sm';
+                    // ปรับสี Quick Tags ให้เข้ากับธีมใหม่
+                    btn.className = 'text-[10px] font-bold bg-white text-gray-600 px-2.5 py-1 rounded-md border border-[#e2dcd0] hover:bg-[#c75b43] hover:border-[#c75b43] hover:text-white transition-colors whitespace-nowrap shadow-sm';
                     btn.innerText = tag;
                     btn.onclick = () => {
                         const noteInput = document.getElementById('details');
@@ -647,16 +658,23 @@
             }
         }
 
-        function toggleCheckbox(inputId, iconId, activeColor = 'text-indigo-500') {
+        // Checkbox Toggle logic (Updated colors for warm theme)
+        function toggleCheckbox(inputId, iconId, activeColor) {
             const cb = document.getElementById(inputId);
             const icon = document.getElementById(iconId);
             cb.checked = !cb.checked;
+            
+            // remove general gray text when active
             if (cb.checked) {
-                icon.classList.remove('text-slate-300');
-                icon.classList.add(activeColor);
+                icon.classList.remove('text-gray-300');
+                icon.classList.add(activeColor.replace('text-', 'text-'));
+                icon.parentElement.classList.add('border-[#c75b43]', 'bg-[#fffaf9]');
+                icon.parentElement.classList.remove('border-[#e2dcd0]', 'bg-white');
             } else {
-                icon.classList.remove(activeColor);
-                icon.classList.add('text-slate-300');
+                icon.classList.remove(activeColor.replace('text-', 'text-'));
+                icon.classList.add('text-gray-300');
+                icon.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+                icon.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
             }
         }
 
@@ -686,7 +704,7 @@
             
             if (amountVal && amountVal > 0 && currentJpyToThbRate > 0) {
                 const thb = (amountVal * currentJpyToThbRate).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                thbEl.innerHTML = `≈ ${thb} THB <span class="text-[8px] text-indigo-300 font-normal ml-0.5">(Rate: ${currentJpyToThbRate.toFixed(4)})</span>`;
+                thbEl.innerHTML = `≈ ${thb} THB <span class="text-[7px] text-indigo-100 font-normal ml-0.5">(Rate: ${currentJpyToThbRate.toFixed(4)})</span>`;
                 thbEl.classList.remove('hidden');
             } else {
                 thbEl.classList.add('hidden');
@@ -752,11 +770,11 @@
             if (navigator.onLine) {
                 btn.disabled = false;
                 btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                btn.innerHTML = currentEditRowId ? 'Update Record <i class="fas fa-save"></i>' : 'Save Record';
+                btn.innerHTML = currentEditRowId ? 'Update Record <i class="fas fa-save"></i>' : 'บันทึกข้อมูลเข้าสู่ระบบ <i class="fas fa-paper-plane"></i>';
             } else {
                 btn.disabled = true;
                 btn.classList.add('opacity-50', 'cursor-not-allowed');
-                btn.innerHTML = '<i class="fas fa-wifi text-rose-400"></i> Offline';
+                btn.innerHTML = '<i class="fas fa-wifi text-rose-400"></i> ออฟไลน์ (Offline)';
             }
         }
 
@@ -807,7 +825,7 @@
                 let todayStr = new Date().toLocaleDateString('en-CA'); 
                 document.getElementById('date').value = todayStr; 
                 
-                document.getElementById('display-username').innerHTML = `<i class="fas fa-user mr-1 text-slate-400"></i>${currentUser.toUpperCase()}`;
+                document.getElementById('display-username').innerHTML = `<i class="fas fa-user mr-1 text-[#c75b43]"></i>${currentUser.toUpperCase()}`;
                 loadDataFromSheet(); 
             } else {
                 localStorage.removeItem('loginTimestamp');
@@ -880,7 +898,7 @@
                 if(res.isValid) { 
                     localStorage.setItem('loginTimestamp', Date.now().toString()); 
                     localStorage.setItem('currentUser', res.username.toUpperCase());
-                    document.getElementById('display-username').innerHTML = `<i class="fas fa-user mr-1 text-slate-400"></i>${res.username.toUpperCase()}`;
+                    document.getElementById('display-username').innerHTML = `<i class="fas fa-user mr-1 text-[#c75b43]"></i>${res.username.toUpperCase()}`;
                     document.getElementById('login-page').classList.add('opacity-0'); 
                     setTimeout(() => { 
                         document.getElementById('login-page').classList.add('hidden'); 
@@ -934,7 +952,7 @@
             const toastIcon = document.getElementById('toast-icon'); 
             
             toastMsg.innerText = message; 
-            toastIcon.className = isError ? "fas fa-exclamation-circle text-rose-400 text-lg" : "fas fa-check-circle text-indigo-400 text-lg"; 
+            toastIcon.className = isError ? "fas fa-exclamation-circle text-rose-400 text-lg" : "fas fa-check-circle text-emerald-400 text-lg"; 
             
             toast.classList.remove('-translate-y-32', 'opacity-0'); 
             toast.classList.add('translate-y-0', 'opacity-100'); 
@@ -989,7 +1007,7 @@
 
         async function loadDataFromSheet() { 
             const list = document.getElementById('history-list'); 
-            if(list) list.innerHTML = '<div class="text-center p-10 text-slate-400 font-bold text-xs"><i class="fas fa-circle-notch fa-spin text-indigo-500 text-3xl mb-4"></i><br>Syncing Data...</div>'; 
+            if(list) list.innerHTML = '<div class="text-center p-10 text-slate-400 font-bold text-xs"><i class="fas fa-circle-notch fa-spin text-[#c75b43] text-3xl mb-4"></i><br>Syncing Data...</div>'; 
             
             try {
                 const res = await fetch(API_URL + "?action=getExpenses").then(r => r.json());
@@ -1066,7 +1084,7 @@
                     plugins: { 
                         legend: { display: false }, 
                         tooltip: { 
-                            backgroundColor: '#0f172a', 
+                            backgroundColor: '#2d3748', 
                             padding: 12, 
                             cornerRadius: 12, 
                             callbacks: { 
@@ -1140,31 +1158,40 @@
             document.getElementById('details').value = item.details;
             oldReceiptUrl = item.receipt;
 
-            // Set toggle UI state
+            // Set toggle UI state for Shared
             const cbShared = document.getElementById('is-shared');
             const iconShared = document.getElementById('icon-shared');
             cbShared.checked = item.isShared;
             if(item.isShared) { 
-                iconShared.classList.remove('text-slate-300'); 
-                iconShared.classList.add('text-indigo-500'); 
+                iconShared.classList.remove('text-gray-300'); 
+                iconShared.classList.add('text-[#c75b43]'); 
+                iconShared.parentElement.classList.add('border-[#c75b43]', 'bg-[#fffaf9]');
+                iconShared.parentElement.classList.remove('border-[#e2dcd0]', 'bg-white');
             } else { 
-                iconShared.classList.remove('text-indigo-500'); 
-                iconShared.classList.add('text-slate-300'); 
+                iconShared.classList.remove('text-[#c75b43]'); 
+                iconShared.classList.add('text-gray-300'); 
+                iconShared.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+                iconShared.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
             }
 
+            // Set toggle UI state for Tax-Free
             const cbTax = document.getElementById('is-taxfree');
             const iconTax = document.getElementById('icon-taxfree');
             cbTax.checked = item.isTaxFree;
             if(item.isTaxFree) { 
-                iconTax.classList.remove('text-slate-300'); 
-                iconTax.classList.add('text-amber-500'); 
+                iconTax.classList.remove('text-gray-300'); 
+                iconTax.classList.add('text-[#c75b43]'); 
+                iconTax.parentElement.classList.add('border-[#c75b43]', 'bg-[#fffaf9]');
+                iconTax.parentElement.classList.remove('border-[#e2dcd0]', 'bg-white');
             } else { 
-                iconTax.classList.remove('text-amber-500'); 
-                iconTax.classList.add('text-slate-300'); 
+                iconTax.classList.remove('text-[#c75b43]'); 
+                iconTax.classList.add('text-gray-300');
+                iconTax.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+                iconTax.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
             }
             
             document.getElementById('submit-btn').innerHTML = 'Update Record <i class="fas fa-save"></i>';
-            document.getElementById('form-title').innerHTML = '<i class="fas fa-edit text-indigo-500"></i> Edit Expense';
+            document.getElementById('form-title').innerHTML = 'Edit Expense';
             
             document.getElementById('cancel-edit-btn').classList.remove('hidden');
 
@@ -1177,21 +1204,32 @@
             
             document.getElementById('expense-form').reset();
             document.getElementById('date').value = new Date().toLocaleDateString('en-CA');
-            document.getElementById('submit-btn').innerHTML = 'Save Record';
-            document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle text-indigo-500"></i> Add Expense';
+            document.getElementById('submit-btn').innerHTML = 'บันทึกข้อมูลเข้าสู่ระบบ <i class="fas fa-paper-plane"></i>';
+            document.getElementById('form-title').innerHTML = 'Add New Expense';
             document.getElementById('cancel-edit-btn').classList.add('hidden');
             document.getElementById('thb-equivalent').classList.add('hidden'); 
 
-            // Reset toggle UI
-            document.getElementById('is-shared').checked = false;
-            document.getElementById('icon-shared').className = "fas fa-users text-slate-300 text-sm transition-colors";
+            // Reset toggle UI Shared
+            const cbShared = document.getElementById('is-shared');
+            const iconShared = document.getElementById('icon-shared');
+            cbShared.checked = false;
+            iconShared.classList.remove('text-[#c75b43]'); 
+            iconShared.classList.add('text-gray-300'); 
+            iconShared.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+            iconShared.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
             
-            document.getElementById('is-taxfree').checked = false;
-            document.getElementById('icon-taxfree').className = "fas fa-tag text-slate-300 text-sm transition-colors";
+            // Reset toggle UI Tax-Free
+            const cbTax = document.getElementById('is-taxfree');
+            const iconTax = document.getElementById('icon-taxfree');
+            cbTax.checked = false;
+            iconTax.classList.remove('text-[#c75b43]'); 
+            iconTax.classList.add('text-gray-300'); 
+            iconTax.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+            iconTax.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
 
             receiptBase64 = null;
             receiptName = null;
-            document.getElementById('receipt-text').innerText = "Receipt";
+            document.getElementById('receipt-text').innerText = "แนบใบเสร็จ";
             
             renderQuickTags();
         }
@@ -1309,7 +1347,7 @@
                 let thbLine = '';
                 if(appliedRate > 0) { 
                     thbLine = `
-                        <p class="text-[10px] font-bold text-indigo-400 mt-0.5 whitespace-nowrap">
+                        <p class="text-[10px] font-bold text-[#c75b43] mt-0.5 whitespace-nowrap">
                             ≈ ${(amt * appliedRate).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})} THB 
                             <span class="text-slate-400 font-medium">(Rate: ${appliedRate.toFixed(4)})</span>
                         </p>
@@ -1319,43 +1357,43 @@
                 // Badge สำหรับ Shared / Tax-Refund
                 let badgeHtml = '';
                 if(item.isShared) {
-                    badgeHtml += `<span class="text-[8px] font-bold bg-sky-50 text-sky-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-sky-100 whitespace-nowrap"><i class="fas fa-users mr-1"></i>Shared</span> `;
+                    badgeHtml += `<span class="text-[8px] font-bold bg-[#2d3748] text-white px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider whitespace-nowrap"><i class="fas fa-users mr-1"></i>Shared</span> `;
                 }
                 if(item.isTaxFree) {
                     badgeHtml += `<span class="text-[8px] font-bold bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-amber-100 whitespace-nowrap"><i class="fas fa-tag mr-1"></i>Tax-Refund</span>`;
                 }
 
-                // History Item Container (เพิ่มคลาส tax-refund-card ถ้ารายการนั้นเป็น Tax-Free)
+                // History Item Container (เพิ่มคลาส tax-refund-card ถ้ารายการนั้นเป็น Tax-Free สี LightGoldenrod1)
                 const div = document.createElement('div'); 
                 div.className = `modern-card p-4 flex justify-between items-start gap-2 ${item.isTaxFree ? 'tax-refund-card' : ''}`; 
                 div.innerHTML = `
                     <div class="flex gap-4 items-start text-left w-full overflow-hidden">
-                        <div class="w-12 h-12 flex-shrink-0 mt-0.5 ${isRef ? 'bg-emerald-50 text-emerald-500 border border-emerald-100' : 'bg-slate-50 text-slate-700 border border-slate-100'} rounded-[16px] flex items-center justify-center">
+                        <div class="w-12 h-12 flex-shrink-0 mt-0.5 ${isRef ? 'bg-emerald-50 text-emerald-500 border border-emerald-100' : 'bg-[#f6f3ed] text-[#c75b43] border border-[#eaddcf]'} rounded-[16px] flex items-center justify-center">
                             <i class="fas ${getIcon(item.category)} text-[18px]"></i>
                         </div>
                         <div class="min-w-0 flex-1">
                             <div class="flex flex-wrap items-center gap-1.5">
-                                <p class="font-bold text-slate-800 text-[13px] leading-tight">${item.category}</p>
-                                <span class="text-[8px] font-bold bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-slate-200 whitespace-nowrap">${item.payment}</span>
-                                <span class="text-[8px] font-bold bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-indigo-100 whitespace-nowrap">
-                                    <i class="fas fa-user mr-1 text-indigo-400"></i>${item.username || 'ADMIN'}
+                                <p class="font-bold text-gray-800 text-[13px] leading-tight">${item.category}</p>
+                                <span class="text-[8px] font-bold bg-white text-gray-500 px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-gray-200 whitespace-nowrap">${item.payment}</span>
+                                <span class="text-[8px] font-bold bg-[#fffaf9] text-[#c75b43] px-1.5 py-0.5 rounded shadow-sm uppercase tracking-wider border border-[#eaddcf] whitespace-nowrap">
+                                    <i class="fas fa-user mr-1 text-[#c75b43]"></i>${item.username || 'ADMIN'}
                                 </span>
                             </div>
                             <div class="mt-1 flex flex-wrap gap-1">${badgeHtml}</div>
-                            <p class="text-[11px] font-medium text-slate-400 mt-1 line-clamp-2 pr-2">${item.details || "-"}</p>
+                            <p class="text-[11px] font-medium text-gray-500 mt-1 line-clamp-2 pr-2">${item.details || "-"}</p>
                             ${thumbHtml}
                         </div>
                     </div>
                     <div class="text-right flex flex-col justify-between h-full items-end">
                         <div class="text-right">
-                            <p class="text-[16px] font-black ${isRef ? 'text-emerald-500' : 'text-slate-900'}">${isRef ? '+' : '-'}${amt.toLocaleString()} JPY</p>
+                            <p class="text-[16px] font-black ${isRef ? 'text-emerald-500' : 'text-gray-900'}">${isRef ? '+' : '-'}${amt.toLocaleString()} JPY</p>
                             ${thbLine}
                         </div>
                         <div class="flex justify-end gap-3 mt-2 items-center">
-                            ${item.receipt ? `<a href="${item.receipt}" target="_blank" class="text-slate-300 hover:text-indigo-500 transition-colors"><i class="fas fa-image text-[13px]"></i></a>` : ''}
-                            ${item.location ? `<a href="${item.location}" target="_blank" class="text-slate-300 hover:text-indigo-500 transition-colors"><i class="fas fa-location-dot text-[13px]"></i></a>` : ''}
-                            <button onclick="editItem(${item.rowId})" class="text-slate-200 hover:text-indigo-500 transition-colors ml-1"><i class="fas fa-pencil-alt text-[13px]"></i></button>
-                            <button onclick="deleteItem(${item.rowId})" class="text-slate-200 hover:text-rose-500 transition-colors ml-1"><i class="fas fa-trash-alt text-[13px]"></i></button>
+                            ${item.receipt ? `<a href="${item.receipt}" target="_blank" class="text-gray-300 hover:text-[#c75b43] transition-colors"><i class="fas fa-image text-[13px]"></i></a>` : ''}
+                            ${item.location ? `<a href="${item.location}" target="_blank" class="text-gray-300 hover:text-[#c75b43] transition-colors"><i class="fas fa-location-dot text-[13px]"></i></a>` : ''}
+                            <button onclick="editItem(${item.rowId})" class="text-gray-200 hover:text-[#c75b43] transition-colors ml-1"><i class="fas fa-pencil-alt text-[13px]"></i></button>
+                            <button onclick="deleteItem(${item.rowId})" class="text-gray-200 hover:text-rose-500 transition-colors ml-1"><i class="fas fa-trash-alt text-[13px]"></i></button>
                         </div>
                     </div>
                 `; 
@@ -1364,8 +1402,8 @@
 
             if(filteredExpenses.length === 0 && list) { 
                 list.innerHTML = `
-                    <div class="text-center p-8 text-slate-400 font-bold text-xs">
-                        <i class="fas fa-search text-2xl mb-2 text-slate-300"></i><br>No matching records
+                    <div class="text-center p-8 text-gray-400 font-bold text-xs">
+                        <i class="fas fa-search text-2xl mb-2 text-gray-300"></i><br>No matching records
                     </div>
                 `; 
             }
@@ -1406,13 +1444,13 @@
             if (uSum) {
                 Object.entries(userStats).sort((a,b) => b[1] - a[1]).forEach(([user, total]) => {
                     const uDiv = document.createElement('div'); 
-                    uDiv.className = "modern-card p-4 text-left border border-indigo-100/50 bg-indigo-50/20 shadow-sm"; 
+                    uDiv.className = "modern-card p-4 text-left border border-[#eaddcf] bg-[#f6f3ed]/50 shadow-sm"; 
                     uDiv.innerHTML = `
                         <div class="flex items-center gap-1.5 mb-1.5">
-                            <i class="fas fa-user-circle text-indigo-400"></i>
-                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">${user}</span>
+                            <i class="fas fa-user-circle text-[#c75b43]"></i>
+                            <span class="text-[10px] font-black text-gray-500 uppercase tracking-widest">${user}</span>
                         </div>
-                        <p class="text-lg font-black text-slate-800 leading-none">${total.toLocaleString()}</p>
+                        <p class="text-lg font-black text-gray-800 leading-none">${total.toLocaleString()}</p>
                     `;
                     uSum.appendChild(uDiv);
                 });
@@ -1421,17 +1459,17 @@
             Object.entries(payStats).forEach(([method, total]) => { 
                 if (total !== 0 || method === 'Cash' || method === 'Credit Card') { 
                     const payDiv = document.createElement('div'); 
-                    payDiv.className = "modern-card p-5 text-left border border-slate-100 shadow-sm"; 
+                    payDiv.className = "modern-card p-5 text-left border border-gray-100 shadow-sm"; 
                     
                     let displayName = method; 
                     let bal = ""; 
                     if (method === "Cash") {
-                        bal = `<p class="text-[10px] font-bold text-indigo-500 mt-1.5">Remain: ${(currentBudget - total).toLocaleString()}</p>`; 
+                        bal = `<p class="text-[10px] font-bold text-[#c75b43] mt-1.5">Remain: ${(currentBudget - total).toLocaleString()}</p>`; 
                     }
                     
                     payDiv.innerHTML = `
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${displayName}</span>
-                        <p class="text-xl font-black text-slate-900 mt-1.5 leading-none">${total.toLocaleString()}</p>
+                        <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${displayName}</span>
+                        <p class="text-xl font-black text-gray-900 mt-1.5 leading-none">${total.toLocaleString()}</p>
                         ${bal}
                     `; 
                     pSum.appendChild(payDiv); 
@@ -1441,30 +1479,30 @@
             Object.keys(daily).sort((a,b) => new Date(b) - new Date(a)).forEach(date => { 
                 const data = daily[date];
                 const mainDiv = document.createElement('div'); 
-                mainDiv.className = "modern-card overflow-hidden shadow-sm mb-4 border border-slate-100"; 
+                mainDiv.className = "modern-card overflow-hidden shadow-sm mb-4 border border-gray-100"; 
                 mainDiv.innerHTML = `
-                    <div onclick="toggleDay('${date}')" class="p-4 flex justify-between items-center cursor-pointer hover:bg-slate-50 transition-colors">
+                    <div onclick="toggleDay('${date}')" class="p-4 flex justify-between items-center cursor-pointer hover:bg-gray-50 transition-colors">
                         <div class="flex items-center gap-3.5">
-                            <div class="w-11 h-11 rounded-[14px] bg-slate-900 text-white flex items-center justify-center font-bold text-sm shadow-md shadow-slate-900/10">
+                            <div class="w-11 h-11 rounded-[14px] bg-[#2d3748] text-white flex items-center justify-center font-bold text-sm shadow-md shadow-[#2d3748]/10">
                                 ${date.split('-')[2]}
                             </div>
-                            <p class="text-xs font-black text-slate-500 uppercase tracking-widest">${date}</p>
+                            <p class="text-xs font-black text-gray-500 uppercase tracking-widest">${date}</p>
                         </div>
                         <div class="flex items-center gap-3.5 text-right">
-                            <p class="text-[17px] font-black text-slate-900">${data.total.toLocaleString()} JPY</p>
-                            <i id="icon-${date}" class="fas fa-chevron-down text-slate-300 text-sm rotate-icon"></i>
+                            <p class="text-[17px] font-black text-gray-900">${data.total.toLocaleString()} JPY</p>
+                            <i id="icon-${date}" class="fas fa-chevron-down text-gray-300 text-sm rotate-icon"></i>
                         </div>
                     </div>
-                    <div id="details-${date}" class="day-details pb-4 px-5 bg-slate-50/50 border-t border-slate-100 text-left">
+                    <div id="details-${date}" class="day-details pb-4 px-5 bg-[#fdfcf8] border-t border-gray-100 text-left">
                         ${Object.keys(data.categories).map(cat => {
                             const catInfo = data.categories[cat];
                             return `
-                                <div class="flex justify-between items-center text-xs py-3 border-b border-slate-200/50 last:border-0">
+                                <div class="flex justify-between items-center text-xs py-3 border-b border-gray-100 last:border-0">
                                     <div class="flex items-center gap-3">
                                         <span class="w-3 h-3 rounded-full shadow-sm" style="background-color: ${globalColorsMap[cat] || '#94a3b8'}"></span>
-                                        <span class="font-bold text-slate-700">${cat}</span>
+                                        <span class="font-bold text-gray-700">${cat}</span>
                                     </div>
-                                    <span class="font-black ${catInfo.isRef ? 'text-emerald-500' : 'text-slate-800'}">
+                                    <span class="font-black ${catInfo.isRef ? 'text-emerald-500' : 'text-gray-800'}">
                                         ${catInfo.isRef ? '+' : '-'}${catInfo.amt.toLocaleString()} JPY
                                     </span>
                                 </div>
@@ -1487,7 +1525,7 @@
                 } else if (remaining <= (currentBudget * 0.3)) {
                     bar.style.background = "#f59e0b"; 
                 } else {
-                    bar.style.background = "#6366f1"; 
+                    bar.style.background = "#c75b43"; 
                 }
             }
             
@@ -1515,16 +1553,16 @@
                     const displayPercent = percent.endsWith('.0') ? percent.slice(0, -2) : percent;
                     
                     const div = document.createElement('div'); 
-                    div.className = "flex justify-between items-center text-xs px-2 py-3 border-b border-slate-50 last:border-0"; 
+                    div.className = "flex justify-between items-center text-xs px-2 py-3 border-b border-gray-50 last:border-0"; 
                     div.innerHTML = `
                         <div class="flex items-center gap-3">
                             <span class="w-3.5 h-3.5 rounded-full shadow-sm" style="background-color: ${globalColorsMap[item.label] || '#94a3b8'}"></span>
                             <div class="flex items-baseline gap-1.5">
-                                <span class="font-bold text-slate-700">${item.label}</span>
-                                <span class="text-[10px] text-slate-400 font-medium">(${displayPercent}%)</span>
+                                <span class="font-bold text-gray-700">${item.label}</span>
+                                <span class="text-[10px] text-gray-400 font-medium">(${displayPercent}%)</span>
                             </div>
                         </div>
-                        <span class="font-black text-slate-900">${item.val.toLocaleString()} JPY</span>
+                        <span class="font-black text-gray-900">${item.val.toLocaleString()} JPY</span>
                     `; 
                     overallListContainer.appendChild(div); 
                 }); 
@@ -1641,15 +1679,26 @@
                         
                         renderQuickTags();
                         
-                        document.getElementById('is-shared').checked = false; 
-                        document.getElementById('icon-shared').className = "fas fa-users text-slate-300 text-sm transition-colors";
+                        // Reset Toggles
+                        const cbShared = document.getElementById('is-shared');
+                        const iconShared = document.getElementById('icon-shared');
+                        cbShared.checked = false;
+                        iconShared.classList.remove('text-[#c75b43]'); 
+                        iconShared.classList.add('text-gray-300'); 
+                        iconShared.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+                        iconShared.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
                         
-                        document.getElementById('is-taxfree').checked = false; 
-                        document.getElementById('icon-taxfree').className = "fas fa-tag text-slate-300 text-sm transition-colors";
+                        const cbTax = document.getElementById('is-taxfree');
+                        const iconTax = document.getElementById('icon-taxfree');
+                        cbTax.checked = false;
+                        iconTax.classList.remove('text-[#c75b43]'); 
+                        iconTax.classList.add('text-gray-300'); 
+                        iconTax.parentElement.classList.remove('border-[#c75b43]', 'bg-[#fffaf9]');
+                        iconTax.parentElement.classList.add('border-[#e2dcd0]', 'bg-white');
                         
                         receiptBase64 = null; 
                         receiptName = null; 
-                        document.getElementById('receipt-text').innerText = "Receipt"; 
+                        document.getElementById('receipt-text').innerText = "แนบใบเสร็จ"; 
                         
                         loadDataFromSheet(); 
                     } else { 
@@ -1660,7 +1709,7 @@
                 }
                 
                 btn.disabled = false; 
-                btn.innerHTML = 'Save Record'; 
+                btn.innerHTML = 'บันทึกข้อมูลเข้าสู่ระบบ <i class="fas fa-paper-plane"></i>'; 
             }
         });
 
