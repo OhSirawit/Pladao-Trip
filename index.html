@@ -210,18 +210,18 @@
                 <i class="fas fa-plane-departure"></i>
             </div>
             <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">PLADAO TRIP</h2>
-            <p class="text-[#c75b43] text-[10px] font-black uppercase tracking-widest mb-8">Trip Wallet</p>
+            <p class="text-indigo-500 text-[10px] font-black uppercase tracking-widest mb-8">Trip Wallet</p>
             <form onsubmit="handleLogin(event)" class="space-y-4">
-                <input type="text" id="username-input" placeholder="Username" class="w-full input-style p-4 text-center text-lg font-bold outline-none lowercase border border-[#e2dcd0]" required autocapitalize="none">
+                <input type="text" id="username-input" placeholder="USER" class="w-full input-style p-4 text-center text-lg font-bold outline-none" required autocapitalize="none">
                 
                 <div class="relative w-full">
-                    <input type="password" id="pin-input" pattern="[0-9]*" inputmode="numeric" placeholder="PIN Code" class="w-full input-style p-4 text-center text-2xl font-black tracking-[0.2em] outline-none pr-12 border border-[#e2dcd0]" required>
-                    <button type="button" onclick="togglePinVisibility()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-[#c75b43] transition-colors focus:outline-none p-2">
-                        <i id="pin-eye-icon" class="fas fa-eye"></i>
+                    <input type="password" id="pin-input" pattern="[0-9]*" inputmode="numeric" placeholder="Password" class="w-full input-style p-4 text-center text-2xl font-black tracking-[0.2em] outline-none pr-12" required>
+                    <button type="button" onclick="togglePinVisibility()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-indigo-500 transition-colors focus:outline-none p-2">
+                        <i id="pin-eye-icon" class="fas fa-eye-slash"></i>
                     </button>
                 </div>
 
-                <button type="submit" id="login-btn" class="w-full btn-modern py-4 text-sm flex justify-center items-center gap-2 mt-2 bg-[#2d3748]">
+                <button type="submit" id="login-btn" class="w-full btn-modern py-4 text-sm flex justify-center items-center gap-2 mt-2">
                     Unlock Wallet <i class="fas fa-arrow-right text-xs"></i>
                 </button>
             </form>
@@ -756,10 +756,10 @@
             const eyeIcon = document.getElementById('pin-eye-icon');
             if (pinInput.type === 'password') {
                 pinInput.type = 'text'; 
-                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
+                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
             } else {
                 pinInput.type = 'password'; 
-                eyeIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                eyeIcon.classList.replace('fa-eye', 'fa-eye-slash');
             }
         }
 
